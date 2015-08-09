@@ -1,39 +1,22 @@
-CakePHP
-=======
+Purpose:
 
-[![CakePHP](http://cakephp.org/img/cake-logo.png)](http://www.cakephp.org)
+This student tracking database is a custom-built database and website front-end that allows Program Officers and staff to track youth involvement in programs, interactions with youth after they graduate high school, and services provide to youth outside of the standard programs. 
+The website’s key features include adding/editing information in the database and reporting summary statistics on student performance.
 
-CakePHP is a rapid development framework for PHP which uses commonly known design patterns like Active Record, Association Data Mapping, Front Controller and MVC.
-Our primary goal is to provide a structured framework that enables PHP users at all levels to rapidly develop robust web applications, without any loss to flexibility.
+Technology:
 
-Some Handy Links
-----------------
+The website is built using a model-view-controller framework called “CakePHP” (version 2.3). Documentation for CakePHP (version 2.3) can be found online at: http://api.cakephp.org/2.3/
+The front-end interface was created with Twitter Bootstrap (version 2.3). Documentation for Twitter Bootstrap can be found online at: http://getbootstrap.com/2.3.0/
+Additional tools that were used in development:
+•	JQuery UI
+•	Bootstrap Datepicker
 
-[CakePHP](http://www.cakephp.org) - The rapid development PHP framework
+Models:
 
-[Cookbook](http://book.cakephp.org) - THE Cake user documentation; start learning here!
-
-[Plugins](http://plugins.cakephp.org/) - A repository of extensions to the framework
-
-[The Bakery](http://bakery.cakephp.org) - Tips, tutorials and articles
-
-[API](http://api.cakephp.org) - A reference to Cake's classes
-
-[CakePHP TV](http://tv.cakephp.org) - Screen casts from events and video tutorials
-
-[The Cake Software Foundation](http://cakefoundation.org/) - promoting development related to CakePHP
-
-Get Support!
-------------
-
-[Our Google Group](http://groups.google.com/group/cake-php) - community mailing list and forum
-
-[#cakephp](http://webchat.freenode.net/?channels=#cakephp) on irc.freenode.net - Come chat with us, we have cake.
-
-[Q & A](http://ask.cakephp.org/) - Ask questions here, all questions welcome
-
-[Lighthouse](http://cakephp.lighthouseapp.com/) - Got issues? Please tell us!
-
-[![Bake Status](https://secure.travis-ci.org/cakephp/cakephp.png?branch=master)](http://travis-ci.org/cakephp/cakephp)
-
-![Cake Power](https://raw.github.com/cakephp/cakephp/master/lib/Cake/Console/Templates/skel/webroot/img/cake.power.gif)
+•	Users: employees of the nonprofit
+•	Students: The youth served by the nonprofit
+•	Centers: Locations where the nonprofit meetings take place
+•	Schools: The schools that students attend and Program Officers serve. Note that multiple schools may send students to the same center.
+•	Scholarships: Monetary awards that students receive with the help of the nonprofit
+•	Services: Any assistance that the nonprofit provides for students outside of the standard program
+•	Semesters: Semesters during which students participate in the nonprofit's programs
