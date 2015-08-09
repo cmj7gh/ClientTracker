@@ -132,7 +132,37 @@ class PagesController extends AppController {
 								'males', 'females', 'unknownGender'));
 		}
 		
+		if($page == 'charts'){
+			//data for Pie Charts
+			$totalStudentsWorkedWith = $this->Student->query("SELECT count(*) from students");
+			$studentsInHS = $this->Student->query("Select count(*) from students where graduated = 0 AND graduation_year >= " . date('Y'));
+			$studentsInCollege = $this->Student->query("Select count(*) from students where graduated = 1 AND college = 1 AND graduated_college = 0");
+			$studentsWorking = $this->Student->query("Select count(*) from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed != 'no' ");
+			$studentsUnemployed = $this->Student->query("Select count(*) from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no' ");
+			$other = $totalStudentsWorkedWith[0][0]['count(*)'] - ($studentsInHS[0][0]['count(*)'] + $studentsInCollege[0][0]['count(*)'] + $studentsWorking[0][0]['count(*)'] + $studentsUnemployed[0][0]['count(*)']);
+			$males = $this->Student->query("Select count(*) from students where gender = 'Male'");
+			$females = $this->Student->query("Select count(*) from students where gender = 'Female'");
+			$unknownGender = $totalStudentsWorkedWith[0][0]['count(*)'] - ($males[0][0]['count(*)'] + $females[0][0]['count(*)'] );
+			
+			$this->set(compact('studentsInHS','studentsInCollege','studentsWorking','studentsUnemployed','other','males','females','unknownGender'));
+		}
 		if($page == 'stats'){
+		
+			//birthdays
+			$todayStaffBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where MONTH(birthday) = MONTH(now()) AND DAYOFMONTH(birthday) = DAYOFMONTH(now())");
+			$todayStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where MONTH(birthday) = MONTH(now()) AND DAYOFMONTH(birthday) = DAYOFMONTH(now())");
+			$nextDay = $this->Student->query("SELECT DAYOFWEEK(DATE_ADD(NOW(), INTERVAL 2 DAY)) as day");
+			$tomorrowStaffBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 1 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 1 DAY))");
+			$tomorrowStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 1 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 1 DAY))");
+			$nextDayStaffBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 2 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 2 DAY))");
+			$nextDayStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 2 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 2 DAY))");
+
+			$this->set(compact('todayStaffBirthdays', 'todayStudentBirthdays', 
+								'nextDay', 'tomorrowStaffBirthdays', 
+								'tomorrowStudentBirthdays', 'nextDayStaffBirthdays', 
+								'nextDayStudentBirthdays'));
+		
+		
 			$startSemester = $this->currentSemester;
 			if(isset($_GET['StartSemester'])){
 				$startSemester = $_GET['StartSemester'];
@@ -183,58 +213,57 @@ class PagesController extends AppController {
 			if(isset($_GET['Center']) && isset($_GET['Stat'])){
 				if($_GET['Stat'] == 'AllMembers'){
 					$valuesRaw = $this->Student->query(
-						"SELECT CONCAT(first_name, ' ', last_name) from students 
+						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
 						where civics_status = 'member' 
 						AND school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ")");
-				
 					$i = 0;
 					foreach($valuesRaw as $v){
-						$values[$i] = $v[0]['CONCAT(first_name, \' \', last_name)'];
+						$values[$i] = '<a href=\'../students/view/' . $v['students']['id'] . '\'> ' . $v[0]['CONCAT(first_name, \' \', last_name)'] . '</a>';
 						$i++;
 					}
 				}elseif($_GET['Stat'] == 'AllStudents'){
 					$valuesRaw = $this->Student->query(
-						"SELECT CONCAT(first_name, ' ', last_name) from students 
+						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
 						where school_id IN (
 							SELECT id from schools where center_id = " . $_GET['Center'] . ")");
 				
 					$i = 0;
 					foreach($valuesRaw as $v){
-						$values[$i] = $v[0]['CONCAT(first_name, \' \', last_name)'];
+						$values[$i] = '<a href=\'../students/view/' . $v['students']['id'] . '\'> ' . $v[0]['CONCAT(first_name, \' \', last_name)'] . '</a>';
 						$i++;
 					}
 				}elseif($_GET['Stat'] == 'TheseStudents'){
 					$valuesRaw = $this->Student->query(
-						"SELECT CONCAT(first_name, ' ', last_name) from students 
+						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
 						where school_id  IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
 						AND id in( SELECT student_id from students_semesters where semester_id in " . $includedSemesters . ")");
 				
 					$i = 0;
 					foreach($valuesRaw as $v){
-						$values[$i] = $v[0]['CONCAT(first_name, \' \', last_name)'];
+						$values[$i] = '<a href=\'../students/view/' . $v['students']['id'] . '\'> ' . $v[0]['CONCAT(first_name, \' \', last_name)'] . '</a>';
 						$i++;
 					}				
 				}elseif($_GET['Stat'] == 'TheseMembers'){
 					$valuesRaw = $this->Student->query(
-						"SELECT CONCAT(first_name, ' ', last_name) from students 
+						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
 						where civics_status = 'member' 
 						AND school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ') 
 						AND semester_member IN ' . $includedSemesters );
 				
 					$i = 0;
 					foreach($valuesRaw as $v){
-						$values[$i] = $v[0]['CONCAT(first_name, \' \', last_name)'];
+						$values[$i] = '<a href=\'../students/view/' . $v['students']['id'] . '\'> ' . $v[0]['CONCAT(first_name, \' \', last_name)'] . '</a>';
 						$i++;
 					}					
 				}elseif($_GET['Stat'] == 'TheseInterns'){
 					$valuesRaw = $this->Student->query(
-						"SELECT CONCAT(first_name, ' ', last_name) from students 
+						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
 						where internship_semester_id IN " . $includedSemesters . " 
 						AND school_id  IN (SELECT id from schools where center_id = " . $_GET['Center'] . ")");
 				
 					$i = 0;
 					foreach($valuesRaw as $v){
-						$values[$i] = $v[0]['CONCAT(first_name, \' \', last_name)'];
+						$values[$i] = '<a href=\'../students/view/' . $v['students']['id'] . '\'> ' . $v[0]['CONCAT(first_name, \' \', last_name)'] . '</a>';
 						$i++;
 					}				
 				}elseif($_GET['Stat'] == 'TheseSites'){

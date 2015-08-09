@@ -61,7 +61,7 @@ public $uses = array('User');
 			$this->redirect(array('controller'=>'users', 'action'=>'edit', $user['id']));
 		}*/
 		$this->Session->setFlash(__('Login Successful'), 'flash_good');
-		$this->redirect(array('controller'=>'pages', 'action'=>'officer_home'));
+		$this->redirect(array('controller'=>'pages', 'action'=>'stats'));
     }
 	
 	public function logout() {

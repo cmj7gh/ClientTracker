@@ -1,95 +1,95 @@
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script src="http://code.highcharts.com/modules/exporting.js"></script>
-<script>
-$(function () {
-    $('#chart_container').highcharts({
-        chart: {
-			renderTo: 'chart_container',
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-        },
-        title: {
-            text: 'Where They Are Now'
-        },
-        tooltip: {
-    	    pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f} %)'
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Student Status',
-            data: [
-                ['In High School',   <?php echo($studentsInHS[0][0]['count(*)']);?>],
-                ['In College',       <?php echo($studentsInCollege[0][0]['count(*)']);?>],
-                {
-                    name: 'Working',
-                    y: <?php echo($studentsWorking[0][0]['count(*)']);?>,
-                    sliced: true,
-                    selected: true
-                },
-                ['Unemployed',    <?php echo($studentsUnemployed[0][0]['count(*)']);?>],
-				['Unknown', <?php echo($other);?>]
-            ]
-        }]
-    });
-	$('#gender_chart_container').highcharts({
-        chart: {
-			renderTo: 'chart_container',
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-        },
-        title: {
-            text: 'Gender'
-        },
-        tooltip: {
-    	    pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f} %)'
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Student Status',
-            data: [
-                ['Male',   <?php echo($males[0][0]['count(*)']);?>],
-                {
-                    name: 'Female',
-                    y: <?php echo($females[0][0]['count(*)']);?>,
-                    sliced: true,
-                    selected: true
-                },
-				['Unknown', <?php echo($unknownGender);?>]
-            ]
-        }]
-    });
-});
-</script>
 
 <h2>
-<div class = 'hero-unit'>
-</br></br>
+<h1 style="text-align:center">Welcome, <?php echo ($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?></h1>
+<hr style="border: 0;border-bottom: 1px dashed #ccc;background: #999;">
+<h2>Search For A Student</h2>
+<form action="/students/search" class="form-horizontal" id="StudentSearchForm" method="get" accept-charset="utf-8"><div style="display:none;">
+	</div>
+	<div class="control-group" style="float:left;">
+	<label for="StudentSearchType" class="control-label">Search Type</label>
+	<div class="controls">
+		<select name="searchType" class="" style="width: 500px;" id="StudentSearchType">
+			<option value="searchName">Name</option>
+			<option value="School.name">School</option>
+			<option value="email">Email</option>
+			<option value="country">Country</option>
+		</select>
+	</div>
+		</div>
+		<div class="control-group" style="float:left;">
+		<label for="StudentSearchString" class="control-label">Search String</label>
+		<div class="controls">
+			<input name="searchString" class="" style="width: 500px;" type="text" id="StudentSearchString"/></div></div>		
+		<div class="control-group" style="float:left;">
+			<div class="controls" style="margin: 0px; margin-left:10px">
+				<button type="submit" class="btn btn-success">
+				Submit			
+			</div>
+		</div>
+</form>
+</br>
+<hr style="border: 0;border-bottom: 1px dashed #ccc;background: #999;">
+<h2>Birthdays:</h2>
+<table class="table">
+<tr>
+<th>Today's Birthdays</th>
+<th>Tomorrow's Birthdays</th>
+<th><?php switch($nextDay[0][0]['day']){
+			case 1: echo "Sunday's Birthdays"; break;
+			case 2: echo "Monday's Birthdays"; break;
+			case 3: echo "Tuesday's Birthdays"; break;
+			case 4: echo "Wednesday's Birthdays"; break;
+			case 5: echo "Thursday's Birthdays"; break;
+			case 6: echo "Friday's Birthdays"; break;
+			case 7: echo "Saturday's Birthdays"; break;
+		} ?></th>
+</tr>
+<tr>
+<td>
+<?php 
+if(count($todayStaffBirthdays) + count($todayStudentBirthdays) == 0){
+	echo("None");
+}else{
+	foreach($todayStaffBirthdays as $tsb){
+		echo($tsb[0]['name'] . ' (STAFF) </br>');
+	};
+	foreach($todayStudentBirthdays as $tstub){
+		echo('<a href=\'../students/view/' . $tstub['students']['id'] . '\'>' . $tstub[0]['name']. '</a></br>');
+	};
+}
+?>
+</td><td>
+<?php 
+if(count($tomorrowStaffBirthdays) + count($tomorrowStudentBirthdays) == 0){
+	echo("None");
+}else{
+	foreach($tomorrowStaffBirthdays as $tosb){
+		echo($tosb[0]['name'] . ' (STAFF) </br>');
+	};
+	foreach($tomorrowStudentBirthdays as $tostub){
+		echo($tostub[0]['name'] . '</br>');
+	};
+}
+?>
+</td><td>
+<?php 
+if(count($nextDayStaffBirthdays) + count($nextDayStudentBirthdays) == 0){
+	echo("None");
+}else{
+	foreach($nextDayStaffBirthdays as $nsb){
+		echo($nsb[0]['name'] . ' (STAFF) </br>');
+	};
+	foreach($nextDayStudentBirthdays as $nstub){
+		echo($nstub[0]['name']. '</br>');
+	};
+}
+?>
+</td></tr>
+</table>
+</br>
+<hr style="border: 0;border-bottom: 1px dashed #ccc;background: #999;">
 <h2>Statistics:</h2>
 </br>
 <form action="/pages/stats" class="form-horizontal" id="StudentStatsForm" method="get" accept-charset="utf-8"><div style="display:none;">
@@ -132,27 +132,10 @@ $(function () {
 		</div>
 	</div>
 </form>
-<!--
-<ul>
-<li>Total LP Members: <?php echo($totalMembers[0][0]['count(*)']); ?></li>
-<li>Total Students LP Has Worked With: <?php echo($totalStudentsWorkedWith[0][0]['count(*)']); ?></li>
-<li>Total Number of Countries Represented: <?php echo($totalCountries[0][0]['count(distinct country)']); ?></li>
-<li>Total Interns: <?php echo($totalInternsAllTime[0][0]['count(*)']);?></li>
-<li>Total Internship Locations: <?php echo($totalInternshipLocations[0][0]['count(distinct internship_location)']); ?></li>
-<li>Total Number of New Members Last Semester: <?php echo($totalStartedLastSemester[0][0]['count(*)']); ?></li>
-<li>Total Students Participants Last Semester: <?php echo($totalParticipantsLastSemester[0][0]['count(distinct student_id)']);?></li>
-<li>Total Interns Last Semester: <?php echo($totalInternsLastSemester[0][0]['count(*)']);?></li>
-</ul>
-</br>
-<div style="width: 100%; margin: 0 auto">
-<div id="gender_chart_container" style="width: 600px; height: 400px; margin: 10px; position: relative; float: left"></div>
-<div id="chart_container" style="width: 600px; height: 400px; margin: 10px; position: relative; float: left"></div>
-</div>
--->
+
 </br>
 </br>
 <!--Included Semesters:
-
 <?php foreach($includedSemestersRaw as $IS){
 	echo("</br>");
 	echo($IS['semesters']['semester'] . ' ' . $IS['semesters']['year']);
@@ -210,7 +193,7 @@ echo("Distinct ");
 				echo 'Countries Of Origin';
 				break;
 		}
-echo( " For " . $mySchools[$_GET['Center']]['centers']['title'] );
+echo( " For " . $mySchools[$_GET['Center']-1]['centers']['title'] );
 echo( " Between " );
 
 			foreach($semesters as $sem){

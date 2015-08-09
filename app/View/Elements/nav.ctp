@@ -8,7 +8,7 @@
          </a>-->
 			<?php
 				if(isset($currentUser)){
-					echo($this->Html->link("Home", '/pages/officer_home', array('class' => 'brand')));
+					echo($this->Html->link("Home", '/pages/stats', array('class' => 'brand')));
 				}else{
 					echo($this->Html->link("Home", '/', array('class' => 'brand')));
 				}
@@ -16,12 +16,7 @@
         <div class="nav-collapse collapse">
             <ul class="nav">
 				<?php if(isset($currentUser)){ ?>
-					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Officer Functions <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><?php echo $this->Html->link(('Mark The End Of A Semester'), array('controller' => 'settings', 'action' => 'newSemester')); ?></li>
-							<li><?php echo $this->Html->link(('Generate Stats'), array('controller' => 'pages', 'action' => 'stats')); ?></li>
-						</ul>
-					</li>
+					<li><?php echo $this->Html->link(('Charts'), array('controller' => 'pages', 'action' => 'charts')); ?></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Youth <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><?php echo $this->Html->link(('Youth at Your Schools'), array('controller' => 'students', 'action' => 'index', 'my')); ?></li>
@@ -31,13 +26,19 @@
 							<li><?php echo $this->Html->link(('LP Alumni'), array('controller' => 'students', 'action' => 'index', 'alumni')); ?></li>
 						</ul>
 					</li>
-					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Sessions <b class="caret"></b></a>
+					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><?php echo $this->Html->link(('Add User'), array('controller' => 'users', 'action' => 'add')); ?></li>
+							<li><?php echo $this->Html->link(('Add School'), array('controller' => 'schools', 'action' => 'add')); ?></li>
+						</ul>
+					</li>
+					<!--<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Sessions <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><?php echo $this->Html->link(('Record New Session'), array('controller' => 'meetings', 'action' => 'before_add')); ?></li>
 							<li><?php echo $this->Html->link(('Sessions at Your Schools'), array('controller' => 'meetings', 'action' => 'index', 'my')); ?></li>
 							<li><?php echo $this->Html->link(('All Sessions'), array('controller' => 'meetings', 'action' => 'index')); ?></li>
 						</ul>
-					</li>
+					</li>-->
 					
 			   	<?php } ?>
             </ul>	

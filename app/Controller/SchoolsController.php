@@ -53,6 +53,11 @@ class SchoolsController extends AppController {
 			$this->redirect(array('controller'=>'pages','action' => 'home'));
 		}else{
 			if ($this->request->is('post')) {
+				$requestData = $this->request->data;
+				$centerData['Center']['title'] = $requestData['School']['name'];
+				$this->School->Center->create();
+				$this->School->Center->save($centerData,false);
+				$requestData['School']['center_id'] = $this->School->Center->getInsertID();
 				$this->School->create();
 				if ($this->School->save($this->request->data)) {
 					$this->Session->setFlash(__('The school has been saved'), 'flash_good');

@@ -80,9 +80,24 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 				$this->Student->create();
 				$requestData = $this->request->data;
 				$requestData['Student']['modified_by'] = $this->currentUser['display_name'];
+				
+				//if the student is a member, set their civics_status to "member", and add semester_member to their semesters_active
+				//if the student is not a member, but they started, set their civics_status to "started"
+				if(isset($requestData['Student']['semester_started']) && $requestData['Student']['semester_started'] != ''){
+					$requestData['Student']['civics_status'] = 'started';
+				}
+				if(isset($requestData['Student']['semester_started']) && $requestData['Student']['semester_started'] != '' && isset($requestData['Student']['semester_member']) && $requestData['Student']['semester_member'] != ''){
+					$requestData['Student']['civics_status'] = 'member';
+				}
+
+				
 				if ($this->Student->save($requestData)) {
-					$this->Session->setFlash(__('The student has been saved'));
-					$this->redirect(array('action' => 'index'));
+					//update semesters_active
+					if(isset($requestData['Student']['semester_started']) && $requestData['Student']['semester_started'] != '' && isset($requestData['Student']['semester_member']) && $requestData['Student']['semester_member'] != ''){
+						$result = $this->Student->query("INSERT INTO students_semesters(student_id, semester_id) values (" . $this->Student->id . ", " . $requestData['Student']['semester_member'] . ")");
+					}
+					$this->Session->setFlash(__('The student has been saved'), 'flash_good');
+					$this->redirect(array('action' => 'view',$this->Student->id));
 				} else {
 					$this->Session->setFlash(__('The student could not be saved. Please, try again.'));
 				}
@@ -113,6 +128,16 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 				//die(var_dump($this->request->data));
 				$requestData = $this->request->data;
 				$requestData['Student']['modified_by'] = $this->currentUser['display_name'];
+				if(isset($requestData['Student']['semester_started']) && $requestData['Student']['semester_started'] != ''){
+					$requestData['Student']['civics_status'] = 'started';
+				}
+				if(isset($requestData['Student']['semester_started']) && $requestData['Student']['semester_started'] != '' && isset($requestData['Student']['semester_member']) && $requestData['Student']['semester_member'] != ''){
+					$requestData['Student']['civics_status'] = 'member';
+				}
+				if(isset($requestData['Student']['semester_started']) && $requestData['Student']['semester_started'] != '' && isset($requestData['Student']['semester_member']) && $requestData['Student']['semester_member'] != ''){
+						$result = $this->Student->query("INSERT IGNORE INTO students_semesters(student_id, semester_id) values (" . $id . ", " . $requestData['Student']['semester_member'] . ")");
+				}
+				
 				if ($this->Student->save($requestData)) {
 					$this->Session->setFlash(__('The student has been saved'), 'flash_good');
 					$this->redirect(array('action' => 'index'));
@@ -127,6 +152,8 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 			$meetings = $this->Student->Meeting->find('list');
 			$semesters = $this->Student->Semester->find('list');
 			$this->set(compact('schools', 'meetings', 'semesters'));
+			$options = array('conditions' => array('Student.' . $this->Student->primaryKey => $id));
+			$this->set('student', $this->Student->find('first', $options));
 		}
 	}
 
@@ -166,7 +193,7 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 				$searchType = Sanitize::clean($_GET['searchType']);
 			}
 			if (isset($searchString) && isset($searchType) && $searchString != null && $searchType != null) {
-				$conditions = array("$searchType LIKE" => '%' . $searchString . '%');
+				$conditions = array("$searchType LIKE" => '%' . str_replace(' ', '%', $searchString) . '%');
 			}
 			$results = $this->Paginate('Student', $conditions);
 			$this->set('students', $results);
@@ -181,7 +208,7 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 		if($this->request->is('post')) {
 			$semester = $this->request->data['Student']['semester'];
 			if ($id != null && $semester != null) {
-				$result = $this->Student->query("INSERT INTO students_semesters(student_id, semester_id) values (" . $id . ", " . $semester . ")");
+				$result = $this->Student->query("INSERT IGNORE INTO students_semesters(student_id, semester_id) values (" . $id . ", " . $semester . ")");
 				if($result){
 								$this->Session->setFlash(__('Semester Added'), 'flash_good');
 								$this->redirect(array('action' => 'view', $id));

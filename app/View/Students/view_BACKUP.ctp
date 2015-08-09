@@ -1,27 +1,10 @@
-<script>
-  $(function() {
-    $( "#tabs" ).tabs();
-  });
-</script>
+
 <div class="students view">
 <h2><?php  echo __($student['Student']['name']); ?>
 &nbsp;
 <?php echo $this->Html->link(__('Edit This Student'), array('action' => 'edit', $student['Student']['id']), array('class' => 'btn btn-large btn-info')); ?>
-
+	
 </h2>
-<div id="tabs">
-<ul>
-	<li><a href="#tabs-1">Demographics</a></li>
-	<li><a href="#tabs-2">Contact Info</a></li>
-	<li><a href="#tabs-3">High School Data</a></li>
-	<li><a href="#tabs-4">Internship Data</a></li>
-	<li><a href="#tabs-5">College Data</a></li>
-	<li><a href="#tabs-6">Employment Data</a></li>
-	<li><a href="#tabs-7">Semesters Active</a></li>
-	<li><a href="#tabs-8">Services and Scholarships</a></li>
-</ul>
-
-	<div id="tabs-1">
 	<dl class="dl-horizontal">
 		<dt><?php echo __('First Name'); ?></dt>
 		<dd>
@@ -53,12 +36,17 @@
 			<?php if(isset($student['Student']['semester_member'])){echo h($semesters[$student['Student']['semester_member']]);} ?>
 			&nbsp;
 		</dd>
+		<!--<dt><?php echo __('Semesters Active'); ?></dt>
+		<dd>
+			<?php echo h($student['Student']['semesters_active']); ?>
+			&nbsp;
+		</dd>-->
 		<dt><?php echo __('Notes'); ?></dt>
 		<dd>
 			<?php echo h($student['Student']['notes']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('# of Children'); ?></dt>
+		<dt><?php echo __('Number of Children'); ?></dt>
 		<dd>
 			<?php echo h($student['Student']['number_children']); ?>
 			&nbsp;
@@ -89,12 +77,8 @@
 			<?php if($student['Student']['refugee_asylee']){echo("Yes");}else{echo("No");} ?>
 			&nbsp;
 		</dd>
-	</dl>
-	</div>
-	<div id="tabs-2">
-	<dl class="dl-horizontal">
 		<h3>Contact Info</h3>
-		<dt><?php echo __('In Const. Cont.?'); ?></dt>
+		<dt><?php echo __('In Constant Contact?'); ?></dt>
 		<dd>
 			<?php if($student['Student']['constant_contact']){echo("Yes");}else{echo("No");} ?>
 			&nbsp;
@@ -134,10 +118,6 @@
 			<?php echo h($student['Student']['home_address']); ?>
 			&nbsp;
 		</dd>
-	</dl>
-	</div>
-	<div id="tabs-3">
-	<dl class="dl-horizontal">
 		<h3>High School Data</h3>
 		<dt><?php echo __('School'); ?></dt>
 		<dd>
@@ -159,17 +139,13 @@
 			<?php if($student['Student']['graduated']){echo("Yes");}else{echo("No");} ?>
 			&nbsp;
 		</dd>
-	</dl>
-	</div>
-	<div id="tabs-4">
-	<dl class="dl-horizontal">
 		<h3>Internship Data</h3>
-		<dt><?php echo __('Semester'); ?></dt>
+		<dt><?php echo __('Internship Semester'); ?></dt>
 		<dd>
 			<?php if(isset($student['Student']['internship_semester_id'])){echo h($semesters[$student['Student']['internship_semester_id']]);} ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Location'); ?></dt>
+		<dt><?php echo __('Internship Location'); ?></dt>
 		<dd>
 			<?php echo h($student['Student']['internship_location']); ?>
 			&nbsp;
@@ -184,10 +160,6 @@
 			<?php if($student['Student']['job_skills_completed']){echo("Completed");}else{echo("Not Completed");} ?>
 			&nbsp;
 		</dd>
-	</dl>
-	</div>
-	<div id="tabs-5">
-	<dl class="dl-horizontal">
 		<h3>College Data</h3>
 		<dt><?php echo __('Went to College?'); ?></dt>
 		<dd>
@@ -199,7 +171,7 @@
 			<?php echo h($student['Student']['college_graduation_year']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Which College?'); ?></dt>
+		<dt><?php echo __('Which College'); ?></dt>
 		<dd>
 			<?php echo h($student['Student']['which_college']); ?>
 			&nbsp;
@@ -209,31 +181,27 @@
 			<?php echo h($student['Student']['major']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('College Grad?'); ?></dt>
+		<dt><?php echo __('Graduated College?'); ?></dt>
 		<dd>
 			<?php if($student['Student']['graduated_college']){echo("Yes");}else{echo("No");} ?>
 			&nbsp;
 		</dd>
 		<h3>Grad School Data</h3>
-		<dt><?php echo __('Grad School?'); ?></dt>
+		<dt><?php echo __('Went to Grad School?'); ?></dt>
 		<dd>
 			<?php if($student['Student']['grad_school']){echo("Yes");}else{echo("No");} ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Which School?'); ?></dt>
+		<dt><?php echo __('Which Grad School'); ?></dt>
 		<dd>
 			<?php echo h($student['Student']['which_grad_school']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Finished?'); ?></dt>
+		<dt><?php echo __('Finished Grad School?'); ?></dt>
 		<dd>
 			<?php if($student['Student']['graduated_grad_school']){echo("Yes");}else{echo("No");} ?>
 			&nbsp;
 		</dd>
-	</dl>
-	</div>
-	<div id="tabs-6">
-	<dl class="dl-horizontal">
 		<h3>Employment Data</h3>
 		<dt><?php echo __('Employed?'); ?></dt>
 		<dd>
@@ -246,9 +214,8 @@
 			&nbsp;
 		</dd>
 	</dl>
-	</div>
-
-<div id="tabs-7" class="related">
+</div>
+<div class="related">
 	<h3><?php echo __('Semesters Active'); ?></h3>
 	<?php if (!empty($student['Semester'])): ?>
 	<?php //var_dump($student['Semester']); ?>
@@ -271,10 +238,6 @@
 	<div class="control-group" style="float:left;"><label for="StudentSearchType" class="control-label">Add Semester</label>
 	<div class="controls">
 		<select name="data[Student][semester]" class="" style="width: 500px;" id="StudentSemester">
-			<option value="33">Spring 2015</option>
-			<option value="32">Fall 2014</option>
-			<option value="31">Summer 2014</option>
-			<option value="30">Spring 2014</option>
 			<option value="29">Fall 2013</option>
 			<option value="1">Spring 2013</option>
 			<option value="2">Summer 2013</option>
@@ -315,7 +278,6 @@
 	</form>	
 </div>
 </br></br>
-<div id="tabs-8">
 <div class="related">
 	<h3><?php echo __('Services Performed'); ?>
 	<?php echo $this->Html->link(__('Add A Service'), array('controller' => 'services', 'action' => 'add', $student['Student']['id']), array('class' => 'btn btn-large btn-success')); ?></h3>
@@ -366,8 +328,6 @@
 	</table>
 	<?php else: echo __('None Yet'); endif; ?>
 </div>
-</div>
-</div>
 <div class="related">
 	<?php if (!empty($student['Meeting'])): ?>
 	<h3><?php echo __('Sessions Attended: ' . count($student['Meeting']) . ' Total'); ?></h3>
@@ -390,5 +350,6 @@
 <?php endif; ?>
 </div>
 
-<?php echo h("This page last modified on " . $student['Student']['modified'] . " by " . $student['Student']['modified_by']); ?>
+<h3>Last Modified</h3>
+<?php echo h($student['Student']['modified'] . " by " . $student['Student']['modified_by']); ?>
 
