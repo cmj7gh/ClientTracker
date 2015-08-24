@@ -194,7 +194,7 @@
 <div id="tabs-6">		
 	<h3>Employment Data</h3>
 	<?php
-		echo $this->Form->input('employed', array('label' => array('class' => 'control-label'), 'options' => array('full'=>'Full Time', 'part'=>'Part Time'), 'empty' => 'Select Status'));	
+		echo $this->Form->input('employed', array('label' => array('class' => 'control-label'), 'options' => array('full'=>'Full Time', 'part'=>'Part Time', 'no'=>'Unemployed'), 'empty' => 'Select Status'));	
 		echo $this->Form->input('where_employed', array('label' => array('class' => 'control-label')));
 	?>
 </div>

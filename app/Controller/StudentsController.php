@@ -38,6 +38,27 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 				$this->set('students', $this->paginate('Student', array('civics_status != '=>'member')));
 			}else if(isset($who) && $who == 'members'){
 				$this->set('students', $this->paginate('Student', array('civics_status'=>'member')));
+			}
+			//these options are linked from wedges in the pie chart
+			else if(isset($who) && $who == 'pieChart_inHS'){
+				$this->set('students', $this->paginate('Student', array('graduated = 0 AND graduation_year >= ' . date('Y'))));
+			}else if(isset($who) && $who == 'pieChart_inCollege'){
+				$this->set('students', $this->paginate('Student', array('college = 1 AND graduated_college = 0 and college_graduation_year >= ' . date('Y'))));
+			}else if(isset($who) && $who == 'pieChart_Working'){
+				$this->set('students', $this->paginate('Student', array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part', 'full')")));
+			}else if(isset($who) && $who == 'pieChart_Unemployed'){
+				$this->set('students', $this->paginate('Student', array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no'")));
+			}else if(isset($who) && $who == 'pieChart_UnknownWhereAreTheyNow'){
+				$this->set('students', $this->paginate('Student', 
+					array("	Student.ID NOT IN(
+								Select ID from students where graduated = 0 AND graduation_year >= " . date('Y') . "
+								UNION ALL
+								Select ID from students where college = 1 AND graduated_college = 0  and college_graduation_year >= " . date('Y') . "
+								UNION ALL
+								Select ID from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part', 'full')
+								UNION ALL
+								Select ID from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no'
+					)")));
 			}else{
 				$this->set('students', $this->paginate('Student'));
 			}

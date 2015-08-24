@@ -237,7 +237,10 @@
 		<h3>Employment Data</h3>
 		<dt><?php echo __('Employed?'); ?></dt>
 		<dd>
-			<?php echo h($student['Student']['employed']); ?>
+			<?php 	IF($student['Student']['employed'] == 'full'){echo("Yes, Full Time");}
+					ELSEIF($student['Student']['employed'] == 'part'){echo("Yes, Part Time");}
+					ELSEIF($student['Student']['employed'] == 'no'){echo("No, Unemployed");}
+					ELSE{echo("Unknown");}?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Where Employed'); ?></dt>
