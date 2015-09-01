@@ -73,7 +73,7 @@ $(function () {
             name: 'Student Status',
             data: [
 				['Dropped Out Of High School', <?php echo($studentsDroppedOutOfHS[0][0]['count(*)']);?>],
-                ['In High School',   <?php echo($studentsInHS[0][0]['count(*)']);?>],
+                ['In High School',   <?php echo($membersInHS[0][0]['count(*)']);?>],
 				['Graduated High School',   <?php echo($studentsGraduatedHS[0][0]['count(*)']);?>],
 				['Some College',       <?php echo($studentsWithSomeCollege[0][0]['count(*)']);?>],
 				['Graduated College',       <?php echo($studentsGraduatedCollege[0][0]['count(*)']);?>],

@@ -147,14 +147,16 @@ class PagesController extends AppController {
 			$unknownGender = $totalStudentsWorkedWith[0][0]['count(*)'] - ($males[0][0]['count(*)'] + $females[0][0]['count(*)'] );
 			
 			//data for "Highest Level of Education Attained" pie chart (re-use studentsInHS and studentsInCollege)
-			$studentsDroppedOutOfHS = $this->Student->query("Select count(*) from students where graduated = 0 AND graduation_year < " . date('Y') . " and college = 0");
-			$studentsGraduatedHS = $this->Student->query("Select count(*) from students where graduated = 1 and college = 0");
-			$studentsGraduatedCollege = $this->Student->query("Select count(*) from students where graduated_college = 1 and grad_school = 0");
-			$studentsWithSomeCollege = $this->Student->query("Select count(*) from students where college = 1 AND graduated_college = 0 and grad_school = 0");
-			//$studentsDidNotCompleteCollege = $this->Student->query("Select count(*) from students where college = 1 AND graduated_college = 0 and college_graduation_year < " . date('Y'));
-			$studentsInGradSchool = $this->Student->query("Select count(*) from students where grad_school = 1 AND graduated_grad_school = 0");
-			$studentsGraduatedGradSchool = $this->Student->query("Select count(*) from students where grad_school = 1 AND graduated_grad_school = 1");
-			$UnknownEducation = $totalStudentsWorkedWith[0][0]['count(*)'] - ($studentsInHS[0][0]['count(*)']
+			$totalMemberInterns = $this->Student->query("Select count(*) FROM vw_students_members_and_interns");
+			$membersInHS = $this->Student->query("Select count(*) from vw_students_members_and_interns where graduated = 0 AND graduation_year >= " . date('Y'));
+			$studentsDroppedOutOfHS = $this->Student->query("Select count(*) from vw_students_members_and_interns where graduated = 0 AND graduation_year < " . date('Y') . " and college = 0");
+			$studentsGraduatedHS = $this->Student->query("Select count(*) from vw_students_members_and_interns where graduated = 1 and college = 0");
+			$studentsGraduatedCollege = $this->Student->query("Select count(*) from vw_students_members_and_interns where graduated_college = 1 and grad_school = 0");
+			$studentsWithSomeCollege = $this->Student->query("Select count(*) from vw_students_members_and_interns where college = 1 AND graduated_college = 0 and grad_school = 0");
+			//$studentsDidNotCompleteCollege = $this->Student->query("Select count(*) from vw_students_members_and_interns where college = 1 AND graduated_college = 0 and college_graduation_year < " . date('Y'));
+			$studentsInGradSchool = $this->Student->query("Select count(*) from vw_students_members_and_interns where grad_school = 1 AND graduated_grad_school = 0");
+			$studentsGraduatedGradSchool = $this->Student->query("Select count(*) from vw_students_members_and_interns where grad_school = 1 AND graduated_grad_school = 1");
+			$UnknownEducation = $totalMemberInterns[0][0]['count(*)'] - ($membersInHS[0][0]['count(*)']
 																				+ $studentsDroppedOutOfHS[0][0]['count(*)']
 																				+ $studentsGraduatedHS[0][0]['count(*)']
 																				+ $studentsWithSomeCollege[0][0]['count(*)']
@@ -162,7 +164,7 @@ class PagesController extends AppController {
 																				+ $studentsInGradSchool[0][0]['count(*)']
 																				+ $studentsGraduatedGradSchool[0][0]['count(*)']);															
 			
-			$this->set(compact('studentsInHS','studentsInCollege','studentsWorking','studentsUnemployed','other','males','females','unknownGender'
+			$this->set(compact('studentsInHS','studentsInCollege','totalMemberInterns','membersInHS','studentsWorking','studentsUnemployed','other','males','females','unknownGender'
 								,'studentsDroppedOutOfHS','studentsGraduatedHS','studentsGraduatedCollege','studentsInGradSchool','studentsGraduatedGradSchool'
 								,'studentsWithSomeCollege','UnknownEducation'));
 		}
