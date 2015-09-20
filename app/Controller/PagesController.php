@@ -63,12 +63,22 @@ class PagesController extends AppController {
 		if (!empty($path[0])) {
 			$page = $path[0];
 		}
+		/****************
+			NOTE: I'm breaking the sub-page and title_for_layout functionality so that I can re-purpose $path[1] as an argument to the /charts/ page
+				Before I did this I kept getting errors saying "view not found /pages/charts/maryland.ctp (ie, it was using Maryland as a page instead of a chart)
+				Someday someone should re-write this as an AJAX call...
+		****************/
+		$argument = 'all';
+		
 		if (!empty($path[1])) {
-			$subpage = $path[1];
+			//$subpage = $path[1];
+			$argument = $path[1];
+			//$path[1] = NULL;
+			$path = array($path[0]);
 		}
-		if (!empty($path[$count - 1])) {
-			$title_for_layout = Inflector::humanize($path[$count - 1]);
-		}
+		//if (!empty($path[$count - 1])) {
+		//	$title_for_layout = Inflector::humanize($path[$count - 1]);
+		//}
 		
 		if($page == 'officer_home'){
 			//birthdays
@@ -133,6 +143,39 @@ class PagesController extends AppController {
 		}
 		
 		if($page == 'charts'){
+			//die(var_dump($subpage));
+			
+			//We're going to filter this whole page based on which school the student is in. let's create a where clause that can be appended to each of these queries
+			//TODO: Make this dynamic so that it picks up new schools. This will probably take a data model change to add a "counties" table with a "state" column
+			$whereClause = 'WHERE 1=1';
+			$textForChartHeader = ' (All Alumni)';
+			IF($argument == 'maryland'){
+				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Montgomery','Prince George'))";
+				$textForChartHeader = ' (Maryland Alumni)';
+			}ELSE IF($argument == 'virginia'){
+				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Alexandria','Fairfax','Arlington'))";
+				$textForChartHeader = ' (Virginia Alumni)';
+			}ELSE IF($argument == 'dc'){
+				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('District of Colombia'))";
+				$textForChartHeader = ' (Washington DC Alumni)';
+			}ELSE IF($argument == 'montgomery'){
+				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Montgomery'))";
+				$textForChartHeader = ' (Montgomery County, MD Alumni)';
+			}ELSE IF($argument == 'princeGeorges'){
+				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Prince George'))";
+				$textForChartHeader = " (Prince George\'s County, MD Alumni)";
+			}ELSE IF($argument == 'baltimore'){
+				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Baltimore'))";
+				$textForChartHeader = ' (Baltimore, MD Alumni)';
+			}ELSE IF($argument == 'arlington'){
+				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Arlington'))";
+				$textForChartHeader = ' (Arlington, VA Alumni)';
+			}ELSE IF($argument == 'alexandria'){
+				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Alexandria'))";
+				$textForChartHeader = ' (Alexandria, VA Alumni)';
+			}
+			
+			//DEPRECATING the "where are they now" chart - we didn't have the data to support it!
 			//data for "Where are they now" Pie Chart
 			$totalStudentsWorkedWith = $this->Student->query("SELECT count(*) from students");
 			$studentsInHS = $this->Student->query("Select count(*) from students where graduated = 0 AND graduation_year >= " . date('Y'));
@@ -140,6 +183,7 @@ class PagesController extends AppController {
 			$studentsWorking = $this->Student->query("Select count(*) from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part','full') ");
 			$studentsUnemployed = $this->Student->query("Select count(*) from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no' ");
 			$other = $totalStudentsWorkedWith[0][0]['count(*)'] - ($studentsInHS[0][0]['count(*)'] + $studentsInCollege[0][0]['count(*)'] + $studentsWorking[0][0]['count(*)'] + $studentsUnemployed[0][0]['count(*)']);
+
 			
 			//data for "Gender" pie chart (not currently displayed)
 			$males = $this->Student->query("Select count(*) from students where gender = 'Male'");
@@ -147,15 +191,15 @@ class PagesController extends AppController {
 			$unknownGender = $totalStudentsWorkedWith[0][0]['count(*)'] - ($males[0][0]['count(*)'] + $females[0][0]['count(*)'] );
 			
 			//data for "Highest Level of Education Attained" pie chart (re-use studentsInHS and studentsInCollege)
-			$totalMemberInterns = $this->Student->query("Select count(*) FROM vw_students_members_and_interns");
-			$membersInHS = $this->Student->query("Select count(*) from vw_students_members_and_interns where graduated = 0 AND graduation_year >= " . date('Y'));
-			$studentsDroppedOutOfHS = $this->Student->query("Select count(*) from vw_students_members_and_interns where graduated = 0 AND graduation_year < " . date('Y') . " and college = 0");
-			$studentsGraduatedHS = $this->Student->query("Select count(*) from vw_students_members_and_interns where graduated = 1 and college = 0");
-			$studentsGraduatedCollege = $this->Student->query("Select count(*) from vw_students_members_and_interns where graduated_college = 1 and grad_school = 0");
-			$studentsWithSomeCollege = $this->Student->query("Select count(*) from vw_students_members_and_interns where college = 1 AND graduated_college = 0 and grad_school = 0");
+			$totalMemberInterns = $this->Student->query("Select count(*) FROM vw_students_members_and_interns " . $whereClause);
+			$membersInHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated = 0 AND graduation_year >= " . date('Y'));
+			$studentsDroppedOutOfHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated = 0 AND graduation_year < " . date('Y') . " and college = 0");
+			$studentsGraduatedHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated = 1 and college = 0");
+			$studentsGraduatedCollege = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated_college = 1 and grad_school = 0");
+			$studentsWithSomeCollege = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND college = 1 AND graduated_college = 0 and grad_school = 0");
 			//$studentsDidNotCompleteCollege = $this->Student->query("Select count(*) from vw_students_members_and_interns where college = 1 AND graduated_college = 0 and college_graduation_year < " . date('Y'));
-			$studentsInGradSchool = $this->Student->query("Select count(*) from vw_students_members_and_interns where grad_school = 1 AND graduated_grad_school = 0");
-			$studentsGraduatedGradSchool = $this->Student->query("Select count(*) from vw_students_members_and_interns where grad_school = 1 AND graduated_grad_school = 1");
+			$studentsInGradSchool = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND grad_school = 1 AND graduated_grad_school = 0");
+			$studentsGraduatedGradSchool = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND grad_school = 1 AND graduated_grad_school = 1");
 			$UnknownEducation = $totalMemberInterns[0][0]['count(*)'] - ($membersInHS[0][0]['count(*)']
 																				+ $studentsDroppedOutOfHS[0][0]['count(*)']
 																				+ $studentsGraduatedHS[0][0]['count(*)']
@@ -166,7 +210,7 @@ class PagesController extends AppController {
 			
 			$this->set(compact('studentsInHS','studentsInCollege','totalMemberInterns','membersInHS','studentsWorking','studentsUnemployed','other','males','females','unknownGender'
 								,'studentsDroppedOutOfHS','studentsGraduatedHS','studentsGraduatedCollege','studentsInGradSchool','studentsGraduatedGradSchool'
-								,'studentsWithSomeCollege','UnknownEducation'));
+								,'studentsWithSomeCollege','UnknownEducation','argument','textForChartHeader'));
 		}
 		if($page == 'stats'){
 		
