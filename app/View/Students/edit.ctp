@@ -117,6 +117,22 @@
 			  </label>
 			</div>
 		</div>
+		<div class="control-group">
+			<div class="controls">
+			  <label class="checkbox">
+				<input type="hidden" name="data[Student][dropped_out_of_high_school]" id="StudentDroppedOutOfHighSchool_" value="0">
+				<input type="checkbox" name="data[Student][dropped_out_of_high_school]" value="1" <?php if($this->request->data['Student']['dropped_out_of_high_school']){echo('checked');}?> id="StudentDroppedOutOfHighSchool"> Dropped Out
+			  </label>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+			  <label class="checkbox">
+				<input type="hidden" name="data[Student][ged]" id="StudentGed_" value="0">
+				<input type="checkbox" name="data[Student][ged]" value="1" <?php if($this->request->data['Student']['ged']){echo('checked');}?> id="StudentGed"> GED
+			  </label>
+			</div>
+		</div>
 </div>
 <div id="tabs-4">		
 	<h3>Internship Data</h3>

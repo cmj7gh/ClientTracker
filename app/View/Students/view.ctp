@@ -159,6 +159,16 @@
 			<?php if($student['Student']['graduated']){echo("Yes");}else{echo("No");} ?>
 			&nbsp;
 		</dd>
+		<dt><?php echo __('Dropped Out?'); ?></dt>
+		<dd>
+			<?php if($student['Student']['dropped_out_of_high_school']){echo("Yes");}else{echo("No");} ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('GED?'); ?></dt>
+		<dd>
+			<?php if($student['Student']['ged']){echo("Yes");}else{echo("No");} ?>
+			&nbsp;
+		</dd>
 	</dl>
 	</div>
 	<div id="tabs-4">

@@ -85,8 +85,9 @@ $(function () {
             type: 'pie',
             name: 'Student Status',
             data: [
+				['In High School',   <?php echo($membersInHS[0][0]['count(*)']);?>],
 				['Dropped Out Of High School', <?php echo($studentsDroppedOutOfHS[0][0]['count(*)']);?>],
-                ['In High School',   <?php echo($membersInHS[0][0]['count(*)']);?>],
+                ['GED', <?php echo($studentsWithGED[0][0]['count(*)']);?>],
 				['Graduated High School',   <?php echo($studentsGraduatedHS[0][0]['count(*)']);?>],
 				['In College',       <?php echo($studentsWithSomeCollege[0][0]['count(*)']);?>],
 				['Graduated College',       <?php echo($studentsGraduatedCollege[0][0]['count(*)']);?>],
@@ -160,6 +161,7 @@ $urlWithoutArguments = substr($url, 0, strpos($url, '/charts'));
 	<a href="<?php echo($urlWithoutArguments);?>/charts/baltimore" class="btn btn-default disabled" <?php IF($argument=='baltimore'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>City of Baltimore</a>
 	<a href="<?php echo($urlWithoutArguments);?>/charts/arlington" class="btn btn-default disabled" <?php IF($argument=='arlington'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Arlington County</a>
 	<a href="<?php echo($urlWithoutArguments);?>/charts/alexandria" class="btn btn-default" <?php IF($argument=='alexandria'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>City of Alexandria</a>
+	<a href="<?php echo($urlWithoutArguments);?>/charts/fairfax" class="btn btn-default" <?php IF($argument=='fairfax'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Fairfax County</a>
   </div>
 </div>
 <hr />

@@ -170,6 +170,9 @@ class PagesController extends AppController {
 			}ELSE IF($argument == 'arlington'){
 				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Arlington'))";
 				$textForChartHeader = ' (Arlington, VA Alumni)';
+			}ELSE IF($argument == 'fairfax'){
+				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Fairfax'))";
+				$textForChartHeader = ' (Fairfax, VA Alumni)';
 			}ELSE IF($argument == 'alexandria'){
 				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Alexandria'))";
 				$textForChartHeader = ' (Alexandria, VA Alumni)';
@@ -193,7 +196,8 @@ class PagesController extends AppController {
 			//data for "Highest Level of Education Attained" pie chart (re-use studentsInHS and studentsInCollege)
 			$totalMemberInterns = $this->Student->query("Select count(*) FROM vw_students_members_and_interns " . $whereClause);
 			$membersInHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated = 0 AND graduation_year >= " . date('Y'));
-			$studentsDroppedOutOfHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated = 0 AND graduation_year < " . date('Y') . " and college = 0");
+			$studentsDroppedOutOfHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND dropped_out_of_high_school = 1 and ged = 0 and college = 0");
+			$studentsWithGED = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND ged = 1 and college = 0");
 			$studentsGraduatedHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated = 1 and college = 0");
 			$studentsGraduatedCollege = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated_college = 1 and grad_school = 0");
 			$studentsWithSomeCollege = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND college = 1 AND graduated_college = 0 and grad_school = 0");
@@ -202,6 +206,7 @@ class PagesController extends AppController {
 			$studentsGraduatedGradSchool = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND grad_school = 1 AND graduated_grad_school = 1");
 			$UnknownEducation = $totalMemberInterns[0][0]['count(*)'] - ($membersInHS[0][0]['count(*)']
 																				+ $studentsDroppedOutOfHS[0][0]['count(*)']
+																				+ $studentsWithGED[0][0]['count(*)']
 																				+ $studentsGraduatedHS[0][0]['count(*)']
 																				+ $studentsWithSomeCollege[0][0]['count(*)']
 																				+ $studentsGraduatedCollege[0][0]['count(*)']
@@ -209,7 +214,7 @@ class PagesController extends AppController {
 																				+ $studentsGraduatedGradSchool[0][0]['count(*)']);															
 			
 			$this->set(compact('studentsInHS','studentsInCollege','totalMemberInterns','membersInHS','studentsWorking','studentsUnemployed','other','males','females','unknownGender'
-								,'studentsDroppedOutOfHS','studentsGraduatedHS','studentsGraduatedCollege','studentsInGradSchool','studentsGraduatedGradSchool'
+								,'studentsDroppedOutOfHS','studentsWithGED','studentsGraduatedHS','studentsGraduatedCollege','studentsInGradSchool','studentsGraduatedGradSchool'
 								,'studentsWithSomeCollege','UnknownEducation','argument','textForChartHeader'));
 		}
 		if($page == 'stats'){

@@ -91,6 +91,22 @@
 			  </label>
 			</div>
 		</div>
+		<div class="control-group">
+			<div class="controls">
+			  <label class="checkbox">
+				<input type="hidden" name="data[Student][dropped_out_of_high_school]" id="StudentDroppedOutOfHighSchool_" value="0">
+				<input type="checkbox" name="data[Student][dropped_out_of_high_school]" value="1" id="StudentDroppedOutOfHighSchool"> Dropped Out
+			  </label>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+			  <label class="checkbox">
+				<input type="hidden" name="data[Student][ged]" id="StudentGed_" value="0">
+				<input type="checkbox" name="data[Student][ged]" value="1" id="StudentGed"> GED
+			  </label>
+			</div>
+		</div>
 	<h3>Internship Data</h3>
 	<?php
 		//echo $this->Form->input('internship_semester', array('label' => array('class' => 'control-label'), 'options' => array('Spring','Summer','Fall'),  'empty' => 'Select Semester'));
