@@ -59,6 +59,25 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 								UNION ALL
 								Select ID from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no'
 					)")));
+			}else if(isset($who) && $who == 'unknown'){
+				$this->set('students', $this->paginate('Student', 
+					array("	Student.ID IN (Select id from vw_students_members_and_interns) AND Student.ID NOT IN(
+								Select id from vw_students_members_and_interns WHERE graduated = 0 AND graduation_year >= " . date('Y') . "
+								UNION
+								Select id from vw_students_members_and_interns WHERE dropped_out_of_high_school = 1 and ged = 0 and college = 0
+								UNION
+								Select id from vw_students_members_and_interns WHERE ged = 1 and college = 0
+								UNION
+								Select id from vw_students_members_and_interns WHERE graduated = 1 and college = 0
+								UNION
+								Select id from vw_students_members_and_interns WHERE college = 1 AND graduated_college = 0 and grad_school = 0
+								UNION
+								Select id from vw_students_members_and_interns WHERE graduated_college = 1 and grad_school = 0
+								UNION
+								Select id from vw_students_members_and_interns WHERE grad_school = 1 AND graduated_grad_school = 0
+								UNION
+								Select id from vw_students_members_and_interns WHERE grad_school = 1 AND graduated_grad_school = 1
+					)")));
 			}else{
 				$this->set('students', $this->paginate('Student'));
 			}
