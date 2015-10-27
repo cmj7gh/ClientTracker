@@ -195,7 +195,7 @@ class PagesController extends AppController {
 			
 			//data for "Highest Level of Education Attained" pie chart (re-use studentsInHS and studentsInCollege)
 			$totalMemberInterns = $this->Student->query("Select count(*) FROM vw_students_members_and_interns " . $whereClause);
-			$membersInHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated = 0 AND graduation_year >= " . date('Y'));
+			$membersInHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated = 0 AND dropped_out_of_high_school = 0 AND graduation_year >= " . date('Y'));
 			$studentsDroppedOutOfHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND dropped_out_of_high_school = 1 and ged = 0 and college = 0");
 			$studentsWithGED = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND ged = 1 and college = 0");
 			$studentsGraduatedHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated = 1 and college = 0");

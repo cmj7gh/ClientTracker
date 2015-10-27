@@ -62,7 +62,7 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 			}else if(isset($who) && $who == 'unknown'){
 				$this->set('students', $this->paginate('Student', 
 					array("	Student.ID IN (Select id from vw_students_members_and_interns) AND Student.ID NOT IN(
-								Select id from vw_students_members_and_interns WHERE graduated = 0 AND graduation_year >= " . date('Y') . "
+								Select id from vw_students_members_and_interns WHERE graduated = 0 AND dropped_out_of_high_school = 0 AND graduation_year >= " . date('Y') . "
 								UNION
 								Select id from vw_students_members_and_interns WHERE dropped_out_of_high_school = 1 and ged = 0 and college = 0
 								UNION
