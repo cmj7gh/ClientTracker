@@ -65,7 +65,7 @@ public $order = array('last_name' => 'ASC', 'first_name' => 'ASC');
 			'deleteQuery' => '',
 			'insertQuery' => ''
 		),
-		'Semester' => array(
+		/*'Semester' => array(
 			'className' => 'Semester',
 			'joinTable' => 'students_semesters',
 			'foreignKey' => 'student_id',
@@ -79,7 +79,7 @@ public $order = array('last_name' => 'ASC', 'first_name' => 'ASC');
 			'finderQuery' => '',
 			'deleteQuery' => '',
 			'insertQuery' => ''
-		)
+		)*/
 	);
 	
 /**
@@ -113,7 +113,8 @@ public $order = array('last_name' => 'ASC', 'first_name' => 'ASC');
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
+		),
+		'StudentSemester'
 	);
 
 }

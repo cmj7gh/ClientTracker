@@ -270,10 +270,10 @@ class PagesController extends AppController {
 			$schoolCount = 0;
 			foreach($mySchools as $school){
 				$mySchools[$schoolCount]['centers']['studentsWorkedWith'] = $this->Student->query("SELECT count(*) from students where school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['participated_last_semester'] = $this->Student->query("SELECT count(*) from students where school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from students_semesters where semester_id in " . $includedSemesters . ")");
+				$mySchools[$schoolCount]['centers']['participated_last_semester'] = $this->Student->query("SELECT count(*) from students where school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
 				$mySchools[$schoolCount]['centers']['members'] = $this->Student->query("SELECT count(*) from students where civics_status = 'member' AND school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['countries'] = $this->Student->query("SELECT count(distinct country) from students where school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from students_semesters where semester_id in " . $includedSemesters . ")");
-				$mySchools[$schoolCount]['centers']['internship_locations'] = $this->Student->query("SELECT count(distinct internship_location) from students where school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND internship_semester_id IN " . $includedSemesters . " AND id in( SELECT student_id from students_semesters where semester_id in " . $includedSemesters . ")");
+				$mySchools[$schoolCount]['centers']['countries'] = $this->Student->query("SELECT count(distinct country) from students where school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
+				$mySchools[$schoolCount]['centers']['internship_locations'] = $this->Student->query("SELECT count(distinct internship_location) from students where school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND internship_semester_id IN " . $includedSemesters . " AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
 				$mySchools[$schoolCount]['centers']['started_last_semester'] = $this->Student->query("Select count(*) from students where semester_member IN " . $includedSemesters . " AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
 				$mySchools[$schoolCount]['centers']['interns_last_semester'] = $this->Student->query("SELECT count(*) from students where internship_semester_id IN " . $includedSemesters . " AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
 				$mySchools[$schoolCount]['centers']['interns_all_time'] = $this->Student->query("SELECT count(*) from students where internship_semester_id is not null AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
@@ -307,7 +307,7 @@ class PagesController extends AppController {
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
 						where school_id  IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
-						AND id in( SELECT student_id from students_semesters where semester_id in " . $includedSemesters . ")");
+						AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
 				
 					$i = 0;
 					foreach($valuesRaw as $v){
@@ -341,7 +341,7 @@ class PagesController extends AppController {
 					$valuesRaw = $this->Student->query(
 						"SELECT distinct internship_location from students 
 						where school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
-						AND id in( SELECT student_id from students_semesters 
+						AND id in( SELECT student_id from student_semesters 
 									where semester_id in " . $includedSemesters . ")
 						AND internship_location is not NULL
 						AND internship_semester_id IN " . $includedSemesters . " 
@@ -356,7 +356,7 @@ class PagesController extends AppController {
 					$valuesRaw = $this->Student->query(
 						"SELECT distinct country from students 
 						where school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
-						AND id in( SELECT student_id from students_semesters 
+						AND id in( SELECT student_id from student_semesters 
 									where semester_id in " . $includedSemesters . ")
 						AND country is not NULL
 						AND country <> ''

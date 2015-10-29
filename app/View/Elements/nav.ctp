@@ -19,6 +19,7 @@
 					<li><?php echo $this->Html->link(('Charts'), array('controller' => 'pages', 'action' => 'charts')); ?></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Youth <b class="caret"></b></a>
 						<ul class="dropdown-menu">
+							<li><?php echo $this->Html->link(('Add a Student'), array('controller' => 'students', 'action' => 'add')); ?></li>
 							<li><?php echo $this->Html->link(('Youth at Your Schools'), array('controller' => 'students', 'action' => 'index', 'my')); ?></li>
 							<li><?php echo $this->Html->link(('All LP Members'), array('controller' => 'students', 'action' => 'index', 'members')); ?></li>
 							<li><?php echo $this->Html->link(('Youth Who Have Started LP Programs But Are Not Members'), array('controller' => 'students', 'action' => 'index', 'started')); ?></li>

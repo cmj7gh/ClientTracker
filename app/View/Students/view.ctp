@@ -263,19 +263,20 @@
 
 <div id="tabs-7" class="related">
 	<h3><?php echo __('Semesters Active'); ?></h3>
-	<?php if (!empty($student['Semester'])): ?>
+	<?php if (!empty($student['StudentSemester'])): ?>
 	<?php //var_dump($student['Semester']); ?>
 	<table class="table table-hover" cellpadding = "0" cellspacing = "0">
 	<tr>
 		<th><?php echo __('Semester'); ?></th>
-		<th><?php echo __('Year'); ?></th>		
+		<th><?php echo __('Program'); ?></th>		
 	</tr>
 	<?php
+		
 		$i = 0;
-		foreach ($student['Semester'] as $semester): ?>
+		foreach ($student['StudentSemester'] as $semester):?>
 		<tr>
-			<td><?php echo $semester['semester']; ?></td>
-			<td><?php echo $semester['year']; ?></td>
+			<td><?php echo $semester['Semester']['name']; ?></td>
+			<td><?php echo $semester['Program']['name']; ?></td>
 		</tr>
 		<?php endforeach; ?>
 	</table>
@@ -284,38 +285,18 @@
 	<div class="control-group" style="float:left;"><label for="StudentSearchType" class="control-label">Add Semester</label>
 	<div class="controls">
 		<select name="data[Student][semester]" class="" style="width: 500px;" id="StudentSemester">
-			<option value="33">Spring 2015</option>
-			<option value="32">Fall 2014</option>
-			<option value="31">Summer 2014</option>
-			<option value="30">Spring 2014</option>
-			<option value="29">Fall 2013</option>
-			<option value="1">Spring 2013</option>
-			<option value="2">Summer 2013</option>
-			<option value="4">Winter 2013</option>
-			<option value="26">Summer 2013</option>
-			<option value="24">Spring 2012</option>
-			<option value="25">Summer 2012</option>
-			<option value="27">Fall 2012</option>
-			<option value="21">Spring 2011</option>
-			<option value="22">Fall 2011</option>
-			<option value="23">Summer 2011</option>
-			<option value="18">Summer 2010</option>
-			<option value="19">Fall 2010</option>
-			<option value="20">Spring 2010</option>
-			<option value="15">Spring 2009</option>
-			<option value="16">Fall 2009</option>
-			<option value="17">Summer 2009</option>
-			<option value="12">Fall 2008</option>
-			<option value="13">Spring 2008</option>
-			<option value="14">Summer 2008</option>
-			<option value="9">Summer 2007</option>
-			<option value="10">Fall 2007</option>
-			<option value="11">Spring 2007</option>
-			<option value="7">Summer 2006</option>
-			<option value="8">Fall 2006</option>
-			<option value="28">Spring 2006</option>
-			<option value="5">Fall 2005</option>
-			<option value="6">Summer 2005</option>
+			<?php foreach($semesters as $semID => $sem):
+				
+				echo('<option value"' . $semID . '">' . $sem . '</option>');
+			endforeach;
+			?>
+		</select>
+		<select name="data[Student][program]" class="" style="width: 500px;" id="StudentProgram">
+			<?php foreach($programs as $progID => $prog):
+				
+				echo('<option value"' . $progID . '">' . $prog . '</option>');
+			endforeach;
+			?>
 		</select>
 	</div>
 		</div>

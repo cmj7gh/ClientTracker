@@ -36,7 +36,7 @@ public $order = 'startingDate';
  *
  * @var array
  */
-	public $hasAndBelongsToMany = array(
+	/*public $hasAndBelongsToMany = array(
 		'Student' => array(
 			'className' => 'Student',
 			'joinTable' => 'students_semesters',
@@ -52,6 +52,10 @@ public $order = 'startingDate';
 			'deleteQuery' => '',
 			'insertQuery' => ''
 		)
-	);
+	);*/
+	
+	public $hasMany = array(
+        'StudentSemester'
+    );
 
 }
