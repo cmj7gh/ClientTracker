@@ -162,7 +162,7 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 				}
 			}
 			$schools = $this->Student->School->find('list');
-			$semesters = $this->Student->StudentSemester->find('list');
+			$semesters = $this->Student->StudentSemester->Semester->find('list');
 			$meetings = $this->Student->Meeting->find('list');
 			$this->set(compact('schools', 'meetings', 'semesters'));
 		}
@@ -209,7 +209,7 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 			}
 			$schools = $this->Student->School->find('list');
 			$meetings = $this->Student->Meeting->find('list');
-			$semesters = $this->Student->StudentSemester->find('list');
+			$semesters = $this->Student->StudentSemester->Semester->find('list');
 			$this->set(compact('schools', 'meetings', 'semesters'));
 			$options = array('conditions' => array('Student.' . $this->Student->primaryKey => $id));
 			$this->set('student', $this->Student->find('first', $options));
