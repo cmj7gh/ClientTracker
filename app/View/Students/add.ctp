@@ -46,9 +46,10 @@
 			</div>
 		</div>
 	<?php	
-		echo $this->Form->input('semester_started', array('label' => array('class' => 'control-label'), 'options' => $semesters, 'empty' => 'Select Semester'));
-		
-		echo $this->Form->input('semester_member', array('label' => array('class' => 'control-label'), 'options' => $semesters, 'empty' => 'Select Semester'));
+		//As of 12/13/2015: Deprecating for now. LP says that they are only interested in tracking students who are actually members. We can do everything off of the student_semesters
+		//table (the "Semesters Active" Page), so this information is redundant.
+		//echo $this->Form->input('semester_started', array('label' => array('class' => 'control-label'), 'options' => $semesters, 'empty' => 'Select Semester'));
+		//echo $this->Form->input('semester_member', array('label' => array('class' => 'control-label'), 'options' => $semesters, 'empty' => 'Select Semester'));
 	?>	
 	<h3>Nationality</h3>
 	<?php
@@ -56,6 +57,7 @@
 		echo $this->Form->input('country2', array('label' => array('class' => 'control-label')));
 		echo $this->Form->input('arrived_in_us', array('label' => array('class' => 'control-label')));
 	?>
+	<!--
 		<div class="control-group">
 			<div class="controls">
 			  <label class="checkbox">
@@ -71,7 +73,8 @@
 				<input type="checkbox" name="data[Student][refugee_asylee]" value="1" id="StudentRefugeeAsylee"> Refugee/Asylee
 			  </label>
 			</div>
-		</div>		
+		</div>	
+	-->
 	<h3>High School Data</h3>
 	<?php
 		//this generates the key-value array to use as the options for the dropdowns in "Graduation Year", "Internship Year", and "College Graduation Year"

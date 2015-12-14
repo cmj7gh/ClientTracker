@@ -151,10 +151,11 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 
 				
 				if ($this->Student->save($requestData)) {
+					//EDIT 2015-12-13 no longer using semester_started or semester_member, no longer automatically assuming that students are members.
 					//update semesters_active
-					if(isset($requestData['Student']['semester_started']) && $requestData['Student']['semester_started'] != '' && isset($requestData['Student']['semester_member']) && $requestData['Student']['semester_member'] != ''){
-						$result = $this->Student->query("INSERT INTO student_semesters(student_id, semester_id) values (" . $this->Student->id . ", " . $requestData['Student']['semester_member'] . ")");
-					}
+					//if(isset($requestData['Student']['semester_started']) && $requestData['Student']['semester_started'] != '' && isset($requestData['Student']['semester_member']) && $requestData['Student']['semester_member'] != ''){
+					//	$result = $this->Student->query("INSERT INTO student_semesters(student_id, semester_id) values (" . $this->Student->id . ", " . $requestData['Student']['semester_member'] . ")");
+					//}
 					$this->Session->setFlash(__('The student has been saved'), 'flash_good');
 					$this->redirect(array('action' => 'view',$this->Student->id));
 				} else {

@@ -48,11 +48,13 @@
 			<?php if(isset($student['Student']['birthday'])){echo date('M j, Y', strtotime($student['Student']['birthday']));} ?>
 			&nbsp;
 		</dd>
+		<!--2015-12-13: Hiding "Member Since". See note in add.ctp 
 		<dt><?php echo __('Member Since'); ?></dt>
 		<dd>
 			<?php if(isset($student['Student']['semester_member'])){echo h($semesters[$student['Student']['semester_member']]);} ?>
 			&nbsp;
 		</dd>
+		-->
 		<dt><?php echo __('Notes'); ?></dt>
 		<dd>
 			<?php echo h($student['Student']['notes']); ?>
@@ -74,21 +76,25 @@
 			<?php echo h($student['Student']['country'] . "\n" . $student['Student']['country2']); ?>
 			&nbsp;
 		</dd>
+		<!--
 		<dt><?php echo __('Immigrant?'); ?></dt>
 		<dd>
 			<?php if($student['Student']['immigrant']){echo("Yes");}else{echo("No");} ?>
 			&nbsp;
 		</dd>
+		-->
 		<dt><?php echo __('Arrived In Us'); ?></dt>
 		<dd>
 			<?php echo h($student['Student']['arrived_in_us']); ?>
 			&nbsp;
 		</dd>
+		<!--
 		<dt><?php echo __('Refugee/Asylee?'); ?></dt>
 		<dd>
 			<?php if($student['Student']['refugee_asylee']){echo("Yes");}else{echo("No");} ?>
 			&nbsp;
 		</dd>
+		-->
 	</dl>
 	</div>
 	<div id="tabs-2">

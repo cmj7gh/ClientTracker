@@ -13,7 +13,7 @@
             'after' => '</div>',
             'class' => ''))); ?>
 	<fieldset>
-		<legend><h2><?php echo __('Edit Student'); ?></h2></legend>
+		<legend><h2><?php echo __('Edit Student: ' . $this->request->data['Student']['name']); ?></h2></legend>
 		
 <div id="tabs">
 <ul>
@@ -53,6 +53,7 @@
 		echo $this->Form->input('country2', array('label' => array('class' => 'control-label')));
 		echo $this->Form->input('arrived_in_us', array('label' => array('class' => 'control-label')));
 	?>
+	<!--	
 		<div class="control-group">
 			<div class="controls">
 			  <label class="checkbox">
@@ -69,7 +70,7 @@
 			  </label>
 			</div>
 		</div>
-	
+	-->
 		
 </div>
 <div id="tabs-2">	
@@ -97,8 +98,10 @@
 	<h3>High School Data</h3>
 	<?php
 		echo $this->Form->input('school_id', array('label' => array('class' => 'control-label'),  'empty' => 'Select School'));
-		echo $this->Form->input('semester_started', array('label' => array('class' => 'control-label'), 'options' => $semesters, 'empty' => 'Select Semester'));
-		echo $this->Form->input('semester_member', array('label' => array('class' => 'control-label'), 'options' => $semesters, 'empty' => 'Select Semester'));
+		
+		//2015-12-13: Hiding "Semester Started" and "Semester Member". See note in add.ctp 
+		//echo $this->Form->input('semester_started', array('label' => array('class' => 'control-label'), 'options' => $semesters, 'empty' => 'Select Semester'));
+		//echo $this->Form->input('semester_member', array('label' => array('class' => 'control-label'), 'options' => $semesters, 'empty' => 'Select Semester'));
 
 		//this generates the key-value array to use as the options for the dropdowns in "Graduation Year", "Internship Year", and "College Graduation Year"
 		$keys = range(2005, date('Y')+5);

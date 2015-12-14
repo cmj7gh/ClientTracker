@@ -250,7 +250,6 @@ class PagesController extends AppController {
 				$includedSemesters = $includedSemesters . $I_S['semesters']['id'] . ',';
 			}
 			$includedSemesters = substr($includedSemesters,0,-1) . ')';
-			//die(var_dump($includedSemesters));
 			$semesters = $this->Student->query("SELECT * From semesters order by year, semester");
 			$StatsType = 'Total';
 			if(isset($_GET['StatsType'])){
@@ -269,23 +268,24 @@ class PagesController extends AppController {
 			
 			$schoolCount = 0;
 			foreach($mySchools as $school){
-				$mySchools[$schoolCount]['centers']['studentsWorkedWith'] = $this->Student->query("SELECT count(*) from students where school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
+				//$mySchools[$schoolCount]['centers']['studentsWorkedWith'] = $this->Student->query("SELECT count(*) from students where school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
 				$mySchools[$schoolCount]['centers']['participated_last_semester'] = $this->Student->query("SELECT count(*) from students where school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
-				$mySchools[$schoolCount]['centers']['members'] = $this->Student->query("SELECT count(*) from students where civics_status = 'member' AND school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
+				//$mySchools[$schoolCount]['centers']['members'] = $this->Student->query("SELECT count(*) from students where id in( SELECT student_id from student_semesters) AND school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
 				$mySchools[$schoolCount]['centers']['countries'] = $this->Student->query("SELECT count(distinct country) from students where school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
 				$mySchools[$schoolCount]['centers']['internship_locations'] = $this->Student->query("SELECT count(distinct internship_location) from students where school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND internship_semester_id IN " . $includedSemesters . " AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
-				$mySchools[$schoolCount]['centers']['started_last_semester'] = $this->Student->query("Select count(*) from students where semester_member IN " . $includedSemesters . " AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
+				$mySchools[$schoolCount]['centers']['started_last_semester'] = $this->Student->query("Select count(*) from students where id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
 				$mySchools[$schoolCount]['centers']['interns_last_semester'] = $this->Student->query("SELECT count(*) from students where internship_semester_id IN " . $includedSemesters . " AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
 				$mySchools[$schoolCount]['centers']['interns_all_time'] = $this->Student->query("SELECT count(*) from students where internship_semester_id is not null AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['newMembers'] = $this->Student->query("SELECT count(*) from students where civics_status = 'member' AND school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ') AND semester_member IN ' . $includedSemesters );
+				$mySchools[$schoolCount]['centers']['newMembers'] = $this->Student->query("SELECT count(*) from students where id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") AND school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ')');
 				$schoolCount++;
 			}
 			
+			//These queries are pulled when anyone clicks on the numbers in the stats table. It shows an actual list of the students in that stat.
 			if(isset($_GET['Center']) && isset($_GET['Stat'])){
 				if($_GET['Stat'] == 'AllMembers'){
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
-						where civics_status = 'member' 
+						where id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") 
 						AND school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ")");
 					$i = 0;
 					foreach($valuesRaw as $v){
@@ -317,7 +317,7 @@ class PagesController extends AppController {
 				}elseif($_GET['Stat'] == 'TheseMembers'){
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
-						where civics_status = 'member' 
+						where id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") 
 						AND school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ') 
 						AND semester_member IN ' . $includedSemesters );
 				

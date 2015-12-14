@@ -142,16 +142,25 @@ if(count($nextDayStaffBirthdays) + count($nextDayStudentBirthdays) == 0){
 	}?>
 -->
 <table class="table table-striped">
-<tr><th>School</th><th>Members</br>[All Time]</th><th>Students Worked With</br>[All Time]</th><th>Participants</br>[These Semsters]</th><th>New Members</br>[These Semesters]</th>
-	<th>Interns</br>[These Semsters]</th><th>Internship Sites</br>[These Semesters]</th><th>Countries Represented</br>[These Semesters]</th></tr>
+<tr>
+	<th>School</th>
+	<!--
+		<th>Members</br>[All Time]</th>
+		<th>Students Worked With</br>[All Time]</th>
+	-->
+	<th>Participants</br>[These Semsters]</th>
+	<th>New Members</br>[These Semesters]</th>
+	<th>Interns</br>[These Semsters]</th>
+	<th>Internship Sites</br>[These Semesters]</th>
+	<th>Countries Represented</br>[These Semesters]</th></tr>
 <?php foreach($mySchools as $school){
 	echo("<tr>");
 	echo("<td>");
 	echo($school['centers']['title'] . "</br>");
-	echo("</td><td>");
-	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=AllMembers'>" . $school['centers']['members'][0][0]['count(*)'] . "</a>");
-	echo("</td><td>");
-	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=AllStudents'>" .$school['centers']['studentsWorkedWith'][0][0]['count(*)'] . "</a>");
+	//echo("</td><td>");
+	//echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=AllMembers'>" . $school['centers']['members'][0][0]['count(*)'] . "</a>");
+	//echo("</td><td>");
+	//echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=AllStudents'>" .$school['centers']['studentsWorkedWith'][0][0]['count(*)'] . "</a>");
 	echo("</td><td>");
 	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=TheseStudents'>" .$school['centers']['participated_last_semester'][0][0]['count(*)'] . "</a>");
 	echo("</td><td>");
