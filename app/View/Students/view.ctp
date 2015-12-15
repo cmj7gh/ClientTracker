@@ -293,14 +293,14 @@
 		<select name="data[Student][semester]" class="" style="width: 500px;" id="StudentSemester">
 			<?php foreach($semesters as $semID => $sem):
 				
-				echo('<option value"' . $semID . '">' . $sem . '</option>');
+				echo('<option value="' . $semID . '">' . $sem . '</option>');
 			endforeach;
 			?>
 		</select>
 		<select name="data[Student][program]" class="" style="width: 500px;" id="StudentProgram">
 			<?php foreach($programs as $progID => $prog):
 				
-				echo('<option value"' . $progID . '">' . $prog . '</option>');
+				echo('<option value="' . $progID . '">' . $prog . '</option>');
 			endforeach;
 			?>
 		</select>
