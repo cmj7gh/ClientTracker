@@ -13,6 +13,7 @@ class School extends AppModel {
  * @var string
  */
 	public $displayField = 'name';
+	public $order = array('School.name'=>'ASC');
 
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed

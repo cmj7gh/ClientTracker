@@ -23,6 +23,11 @@ public $uses = array('User');
 		if($this->request->is('post')) {        //Only run on POST; GET requests simply load the view.
             if ($this->Auth->login()) {
                 if($this->Auth->user()) {
+					$user = $this->Session->read('Auth.User');
+					if($user['isActive'] == 0){
+						$this->Session->setFlash(__('Your account has been deactivated. It will need to be re-activated if you wish to continue using this website.'), 'flash_bad');
+						$this->redirect($this->Auth->logout());
+					}
 					//I had to take this line out, because apparently if output starts before the redirect, the PHP on the next page doesn't execute
 					//this created an ugly race conditiont hat sucked to debug.... this print wasn't doing anything anyway.
                     //echo("login successful");
@@ -183,6 +188,58 @@ public $uses = array('User');
 				$this->redirect(array('action' => 'index'));
 			}
 			$this->Session->setFlash(__('User was not deleted'));
+			$this->redirect(array('action' => 'index'));
+		}
+	}
+	
+/**
+ * deactivate method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function deactivate($id = null) {
+		if($this->currentUser == null){
+			$this->Session->setFlash(__('You must log in to do that!'));
+			$this->redirect(array('controller'=>'pages','action' => 'home'));
+		}else{
+			$this->User->id = $id;
+			if (!$this->User->exists()) {
+				throw new NotFoundException(__('Invalid user'));
+			}
+			$this->request->onlyAllow('post');
+			if ($this->User->saveField('isActive', 0)) {
+				$this->Session->setFlash(__('User successfully deactivated'));
+				$this->redirect(array('action' => 'index'));
+			}
+			$this->Session->setFlash(__('User was not deactivated'));
+			$this->redirect(array('action' => 'index'));
+		}
+	}
+	
+/**
+ * reactivate method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function reactivate($id = null) {
+		if($this->currentUser == null){
+			$this->Session->setFlash(__('You must log in to do that!'));
+			$this->redirect(array('controller'=>'pages','action' => 'home'));
+		}else{
+			$this->User->id = $id;
+			if (!$this->User->exists()) {
+				throw new NotFoundException(__('Invalid user'));
+			}
+			$this->request->onlyAllow('post');
+			if ($this->User->saveField('isActive', 1)) {
+				$this->Session->setFlash(__('User successfully reactivated'));
+				$this->redirect(array('action' => 'index'));
+			}
+			$this->Session->setFlash(__('User was not reactivated'));
 			$this->redirect(array('action' => 'index'));
 		}
 	}

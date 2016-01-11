@@ -29,8 +29,9 @@
 					</li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><?php echo $this->Html->link(('Add User'), array('controller' => 'users', 'action' => 'add')); ?></li>
-							<li><?php echo $this->Html->link(('Add School'), array('controller' => 'schools', 'action' => 'add')); ?></li>
+							<li><?php echo $this->Html->link(('Add a user'), array('controller' => 'users', 'action' => 'add')); ?></li>
+							<li><?php echo $this->Html->link(('Add a school'), array('controller' => 'schools', 'action' => 'add')); ?></li>
+							<li><?php echo $this->Html->link(('Add a program to a school'), array('controller' => 'programs', 'action' => 'add')); ?></li>
 						</ul>
 					</li>
 					<!--<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Sessions <b class="caret"></b></a>
