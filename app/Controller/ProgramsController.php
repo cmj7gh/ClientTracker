@@ -62,7 +62,7 @@ class ProgramsController extends AppController {
 				$requestData['School']['programName'] = $requestData['School']['programtypeName'] . ' at ' . $requestData['School']['schoolName']; //eg. "CE-BELL at Wheaton High School"
 				$this->Program->create();
 				if ($this->Program->save(array('Program'=>array('name'=>$requestData['School']['programName'],'programtype_id' => $requestData['School']['programtype_id'])))) {
-					$this->Program->query("INSERT INTO programs_Schools(program_id, school_id) VALUES (" . $this->Program->id . ',' . $requestData['School']['school_id'] . ")");
+					$this->Program->query("INSERT INTO programs_schools(program_id, school_id) VALUES (" . $this->Program->id . ',' . $requestData['School']['school_id'] . ")");
 					$this->Session->setFlash(__('The program has been saved'), 'flash_good');
 					$this->redirect(array('action' => 'index'));
 				} else {
