@@ -1,7 +1,9 @@
+<!-- Javascript libraries loaded into the page -->
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script src="/js/underscore-min.js"></script>
+<script src="/js/backbone-min.js"></script>
 
-<h2>
 <h1 style="text-align:center">Welcome, <?php echo ($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?></h1>
 <hr style="border: 0;border-bottom: 1px dashed #ccc;background: #999;">
 <h2>Search For A Student</h2>
