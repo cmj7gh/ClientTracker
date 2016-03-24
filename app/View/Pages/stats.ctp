@@ -4,35 +4,40 @@
 <script src="/js/underscore-min.js"></script>
 <script src="/js/backbone-min.js"></script>
 
-<h1 style="text-align:center">Welcome, <?php echo ($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?></h1>
-<hr style="border: 0;border-bottom: 1px dashed #ccc;background: #999;">
-<h2>Search For A Student</h2>
-<form action="/students/search" class="form-horizontal" id="StudentSearchForm" method="get" accept-charset="utf-8"><div style="display:none;">
-	</div>
-	<div class="control-group" style="float:left;">
-	<label for="StudentSearchType" class="control-label">Search Type</label>
-	<div class="controls">
-		<select name="searchType" class="" style="width: 500px;" id="StudentSearchType">
-			<option value="searchName">Name</option>
-			<option value="School.name">School</option>
-			<option value="email">Email</option>
-			<option value="country">Country</option>
-		</select>
-	</div>
-		</div>
-		<div class="control-group" style="float:left;">
-		<label for="StudentSearchString" class="control-label">Search String</label>
-		<div class="controls">
-			<input name="searchString" class="" style="width: 500px;" type="text" id="StudentSearchString"/></div></div>		
-		<div class="control-group" style="float:left;">
-			<div class="controls" style="margin: 0px; margin-left:10px">
-				<button type="submit" class="btn btn-success">
-				Submit			
+<!-- CSS files loaded in to store certain stylings -->
+<link rel="stylesheet" type="text/css" href="/css/custom/stats.css"></link>
+
+<h1 id="user-greeting">Welcome, <?php echo ($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?></h1>
+
+<!-- Search form to search for a student -->
+<div id="search-form">
+	<h2>Search For A Student</h2>
+	<form action="/students/search" class="form-horizontal row" id="StudentSearchForm" method="get" accept-charset="utf-8">
+		<div class="control-group pull-left">
+			<label for="StudentSearchType" class="control-label">Search Type</label>
+			<div class="controls">
+				<select name="searchType" class="student-search" id="StudentSearchType">
+					<option value="searchName">Name</option>
+					<option value="School.name">School</option>
+					<option value="email">Email</option>
+					<option value="country">Country</option>
+				</select>
 			</div>
 		</div>
-</form>
-</br>
-<hr style="border: 0;border-bottom: 1px dashed #ccc;background: #999;">
+		<div class="control-group pull-left">
+			<label for="StudentSearchString" class="control-label">Search String</label>
+			<div class="controls">
+				<input name="searchString" class="student-search" type="text" id="StudentSearchString"/></input>
+			</div>
+		</div>
+		<div class="control-group pull-left">
+			<div class="controls" id="search-submit-container">
+				<button type="submit" class="btn btn-success">Submit</button>
+			</div>
+		</div>
+	</form>
+</div>
+
 <h2>Birthdays:</h2>
 <table class="table">
 <tr>
