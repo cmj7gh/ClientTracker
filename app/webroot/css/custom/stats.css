@@ -1,0 +1,19 @@
+#user-greeting {
+	text-align: center;
+	border: 0;
+	border-bottom: 1px dashed #ccc;
+}
+
+.student-search {
+	width: 500px;
+}
+
+#search-form {
+	border: 0;
+	border-bottom: 1px dashed #ccc;
+}
+
+#search-submit-container {
+	margin: 0px;
+	margin-left: 10px;
+}
