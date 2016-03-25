@@ -20,7 +20,7 @@
 <h2><?php echo $name; ?></h2>
 <p class="error">
 	<strong><?php echo __d('cake', 'Error'); ?>: </strong>
-	<legend><?php echo __('Hmm, it looks like something went wrong. Please send a screenshot of this error message along with the content of the URL bar to Chris Jones at <a href="mailto:cmj7gh@virginia.edu">cmj7gh@virginia.edu</a> - sorry for the inconvenience!'); ?></legend>
+	<legend><?php echo __('Hmm, it looks like something went wrong. Please send a screenshot of this error message along with the content of the URL bar to Chris Jones at <a href="mailto:cmj7gh@virginia.edu">cmj7gh@virginia.edu</a> or Roo Shivkumar at <a href="mailto:databasevol@libertyspromise.org">databasevol@libertyspromise.org</a> - sorry for the inconvenience!'); ?></legend>
 </p>
 <?php
 if (Configure::read('debug') > 0):
