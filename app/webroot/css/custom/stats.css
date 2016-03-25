@@ -17,3 +17,9 @@
 	margin: 0px;
 	margin-left: 10px;
 }
+.birthday-person {
+	display: block;
+}
+.birthday-list {
+	width: 33%;
+}

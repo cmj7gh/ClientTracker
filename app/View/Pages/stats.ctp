@@ -4,6 +4,11 @@
 <script src="/js/underscore-min.js"></script>
 <script src="/js/backbone-min.js"></script>
 
+<!-- Javascript MVC for this application loaded -->
+<script src="/js/models/BirthdayTableModel.js"></script>
+<script src="/js/views/BirthdayTableView.js"></script>
+<script src="/js/activity/stats/birthday.js"></script>
+
 <!-- CSS files loaded in to store certain stylings -->
 <link rel="stylesheet" type="text/css" href="/css/custom/stats.css"></link>
 
@@ -38,63 +43,22 @@
 	</form>
 </div>
 
-<h2>Birthdays:</h2>
-<table class="table">
-<tr>
-<th>Today's Birthdays</th>
-<th>Tomorrow's Birthdays</th>
-<th><?php switch($nextDay[0][0]['day']){
-			case 1: echo "Sunday's Birthdays"; break;
-			case 2: echo "Monday's Birthdays"; break;
-			case 3: echo "Tuesday's Birthdays"; break;
-			case 4: echo "Wednesday's Birthdays"; break;
-			case 5: echo "Thursday's Birthdays"; break;
-			case 6: echo "Friday's Birthdays"; break;
-			case 7: echo "Saturday's Birthdays"; break;
-		} ?></th>
-</tr>
-<tr>
-<td>
-<?php 
-if(count($todayStaffBirthdays) + count($todayStudentBirthdays) == 0){
-	echo("None");
-}else{
-	foreach($todayStaffBirthdays as $tsb){
-		echo($tsb[0]['name'] . ' (STAFF) </br>');
-	};
-	foreach($todayStudentBirthdays as $tstub){
-		echo('<a href=\'../students/view/' . $tstub['students']['id'] . '\'>' . $tstub[0]['name']. '</a></br>');
-	};
-}
-?>
-</td><td>
-<?php 
-if(count($tomorrowStaffBirthdays) + count($tomorrowStudentBirthdays) == 0){
-	echo("None");
-}else{
-	foreach($tomorrowStaffBirthdays as $tosb){
-		echo($tosb[0]['name'] . ' (STAFF) </br>');
-	};
-	foreach($tomorrowStudentBirthdays as $tostub){
-		echo($tostub[0]['name'] . '</br>');
-	};
-}
-?>
-</td><td>
-<?php 
-if(count($nextDayStaffBirthdays) + count($nextDayStudentBirthdays) == 0){
-	echo("None");
-}else{
-	foreach($nextDayStaffBirthdays as $nsb){
-		echo($nsb[0]['name'] . ' (STAFF) </br>');
-	};
-	foreach($nextDayStudentBirthdays as $nstub){
-		echo($nstub[0]['name']. '</br>');
-	};
-}
-?>
-</td></tr>
-</table>
+<!-- Birthdays Container -->
+<div id="birthdays">
+	<h2>Birthdays:</h2>
+	<table class="table">
+		<tr>
+			<th>Today's Birthdays</th>
+			<th>Tomorrow's Birthdays</th>
+			<th id="two-days-out"></th>
+		</tr>
+		<tr>
+			<td id="todays-birthdays" class="birthday-list"></td>
+			<td id="tomorrows-birthdays" class="birthday-list"></td>
+			<td id="two-days-out-birthdays" class="birthday-list"></td>
+		</tr>
+	</table>
+</div>
 </br>
 <hr style="border: 0;border-bottom: 1px dashed #ccc;background: #999;">
 <h2>Statistics:</h2>
