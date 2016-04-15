@@ -53,4 +53,11 @@ class AppController extends Controller {
 	  $this->set('currentUser', $this->currentUser = $currentUser, 'currentSemester', $this->currentSemester = $currentSemester['Setting']['status']);
 	  $this->SQLLog->LogEvent();
 	}
+
+	public function name() {
+		$this->autoRender = null;
+		$this->layout = null;
+		$user = $this->Session->read('Auth.User');
+		return json_encode($user['first_name'] . ' ' . $user['last_name']);
+	}
 }
