@@ -59,6 +59,13 @@ class PagesController extends AppController {
 		return json_encode($this->Birthday->getBirthdayInfo());
 	}
 
+	// Returns the list of semesters for the search form back to client
+	public function semesters() {
+		$this->autoRender = null;
+		$this->layout = null;
+		return json_encode($this->Semester->getAllSemesters());
+	}
+
 	public function display() {
 		$path = func_get_args();
 
