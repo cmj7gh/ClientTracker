@@ -1,5 +1,8 @@
 #user-greeting {
 	text-align: center;
+}
+
+.border-bottom {
 	border: 0;
 	border-bottom: 1px dashed #ccc;
 }
@@ -8,15 +11,15 @@
 	width: 500px;
 }
 
-#search-form {
-	border: 0;
-	border-bottom: 1px dashed #ccc;
-}
-
 #search-submit-container {
 	margin: 0px;
 	margin-left: 10px;
 }
+
+#submit-button {
+	margin-left: 3%;
+}
+
 .birthday-person {
 	display: block;
 }
