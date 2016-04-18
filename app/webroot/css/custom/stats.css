@@ -1,0 +1,28 @@
+#user-greeting {
+	text-align: center;
+}
+
+.border-bottom {
+	border: 0;
+	border-bottom: 1px dashed #ccc;
+}
+
+.student-search {
+	width: 500px;
+}
+
+#search-submit-container {
+	margin: 0px;
+	margin-left: 10px;
+}
+
+#submit-button {
+	margin-left: 3%;
+}
+
+.birthday-person {
+	display: block;
+}
+.birthday-list {
+	width: 33%;
+}

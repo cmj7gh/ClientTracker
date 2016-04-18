@@ -62,7 +62,7 @@ $cakeDescription = __d('cake_dev', 'Liberty\'s Promise');
 		</div>
 		<div class="bottom-bar">
 		<div class="modal-footer">
-			<a href="http://libertyspromise.org/">Liberty's Promise</a>  &copy; <?php echo date("Y") ?> Questions? Contact <a href="mailto:cmj7gh@virginia.edu">cmj7gh@virginia.edu</a>
+			<a href="http://libertyspromise.org/">Liberty's Promise</a>  &copy; <?php echo date("Y") ?> Questions? Contact <a href="mailto:cmj7gh@virginia.edu">cmj7gh@virginia.edu</a> or <a href="mailto:databasevol@libertyspromise.org">databasevol@libertyspromise.org</a>
 			
 			<?php echo $this->Html->link(
 					$this->Html->image('cake.power.gif', array('alt' => $cakeDescription, 'border' => '0')),

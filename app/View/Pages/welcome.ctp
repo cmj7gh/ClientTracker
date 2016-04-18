@@ -6,7 +6,5 @@
 <h2>
 <div class="hero-unit">
 <h1>Liberty's Promise Client Management Database</h1>
-
-**LP Statistics To Be Added Here**
 </div>
 </h2>

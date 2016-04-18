@@ -43,7 +43,7 @@ class PagesController extends AppController {
  *
  * @var array
  */
-	public $uses = array('Student', 'Semester');
+	public $uses = array('Student', 'Semester', 'Birthday');
 
 /**
  * Displays a view
@@ -51,6 +51,21 @@ class PagesController extends AppController {
  * @param mixed What page to display
  * @return void
  */
+
+	// Returns the birthday information for the table back to client
+	public function birthdays() {
+		$this->autoRender = null;
+		$this->layout = null;
+		return json_encode($this->Birthday->getBirthdayInfo());
+	}
+
+	// Returns the list of semesters for the search form back to client
+	public function semesters() {
+		$this->autoRender = null;
+		$this->layout = null;
+		return json_encode($this->Semester->getAllSemesters());
+	}
+
 	public function display() {
 		$path = func_get_args();
 
@@ -218,22 +233,6 @@ class PagesController extends AppController {
 								,'studentsWithSomeCollege','UnknownEducation','argument','textForChartHeader'));
 		}
 		if($page == 'stats'){
-		
-			//birthdays
-			$todayStaffBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where MONTH(birthday) = MONTH(now()) AND DAYOFMONTH(birthday) = DAYOFMONTH(now())");
-			$todayStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where MONTH(birthday) = MONTH(now()) AND DAYOFMONTH(birthday) = DAYOFMONTH(now())");
-			$nextDay = $this->Student->query("SELECT DAYOFWEEK(DATE_ADD(NOW(), INTERVAL 2 DAY)) as day");
-			$tomorrowStaffBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 1 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 1 DAY))");
-			$tomorrowStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 1 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 1 DAY))");
-			$nextDayStaffBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 2 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 2 DAY))");
-			$nextDayStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 2 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 2 DAY))");
-
-			$this->set(compact('todayStaffBirthdays', 'todayStudentBirthdays', 
-								'nextDay', 'tomorrowStaffBirthdays', 
-								'tomorrowStudentBirthdays', 'nextDayStaffBirthdays', 
-								'nextDayStudentBirthdays'));
-		
-		
 			$startSemester = $this->currentSemester;
 			if(isset($_GET['StartSemester'])){
 				$startSemester = $_GET['StartSemester'];
