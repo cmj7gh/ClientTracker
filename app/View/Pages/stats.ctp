@@ -17,7 +17,7 @@
 <!-- CSS files loaded in to store certain stylings -->
 <link rel="stylesheet" type="text/css" href="/css/custom/stats.css"></link>
 
-<h1 id="user-greeting" class="border-bottom">Welcome, <?php echo ($currentUser['first_name'] . ' ' . $currentUser['last_name']); ?></h1>
+<h1 id="user-greeting"></h1>
 
 <!-- Search form to search for a student -->
 <div class="border-bottom">

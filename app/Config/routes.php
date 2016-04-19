@@ -35,8 +35,9 @@
 /**
   * Defining custom REST endpoints
   */
-	Router::connect('/birthdays', array('controller' => 'pages', 'action' => 'birthdays'));
-	Router::connect('/semesters', array('controller' => 'pages', 'action' => 'semesters'));
+        Router::connect('/birthdays', array('controller' => 'pages', 'action' => 'birthdays'));
+        Router::connect('/semesters', array('controller' => 'pages', 'action' => 'semesters'));
+        Router::connect('/auth-user', array('controller' => 'app', 'action' => 'name'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on
