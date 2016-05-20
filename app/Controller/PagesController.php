@@ -380,7 +380,7 @@ class PagesController extends AppController {
 								'studentsInHS','studentsInCollege','studentsWorking',
 								'studentsUnemployed','other', 'includedSemestersRaw',
 								'males', 'females', 'unknownGender', 'values',
-								'startSemester', 'EndSemester'));
+								'startSemester', 'EndSemester', 'includedSemesters'));
 		}
 		
 		$this->set(compact('page', 'subpage', 'title_for_layout'));
