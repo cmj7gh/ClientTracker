@@ -31,26 +31,26 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 					$school_ids[] = $s['users_schools']['school_id'];
 				}
 				//var_dump($school_ids);
-				$this->set('students', $this->paginate('Student', array('Student.school_id IN' => $school_ids, 'graduated' =>false, 'civics_status !=' => 'none')));
+				$this->set('students', $this->paginate('Student', array('Student.school_id IN' => $school_ids, 'graduated' =>false, 'civics_status !=' => 'none', 'dateDeleted' => NULL)));
 			}else if(isset($who) && $who == 'alumni'){
-				$this->set('students', $this->paginate('Student', array('graduated'=>true, 'civics_status'=>'member')));
+				$this->set('students', $this->paginate('Student', array('graduated'=>true, 'civics_status'=>'member', 'dateDeleted' => NULL)));
 			}else if(isset($who) && $who == 'started'){
-				$this->set('students', $this->paginate('Student', array('civics_status != '=>'member')));
+				$this->set('students', $this->paginate('Student', array('civics_status != '=>'member', 'dateDeleted' => NULL)));
 			}else if(isset($who) && $who == 'members'){
-				$this->set('students', $this->paginate('Student', array('civics_status'=>'member')));
+				$this->set('students', $this->paginate('Student', array('civics_status'=>'member', 'dateDeleted' => NULL)));
 			}
 			//these options are linked from wedges in the pie chart
 			else if(isset($who) && $who == 'pieChart_inHS'){
-				$this->set('students', $this->paginate('Student', array('graduated = 0 AND graduation_year >= ' . date('Y'))));
+				$this->set('students', $this->paginate('Student', array('graduated = 0 AND dateDeleted IS NULL AND graduation_year >= ' . date('Y'))));
 			}else if(isset($who) && $who == 'pieChart_inCollege'){
-				$this->set('students', $this->paginate('Student', array('college = 1 AND graduated_college = 0 and college_graduation_year >= ' . date('Y'))));
+				$this->set('students', $this->paginate('Student', array('college = 1 AND dateDeleted IS NULL  AND graduated_college = 0 and college_graduation_year >= ' . date('Y'))));
 			}else if(isset($who) && $who == 'pieChart_Working'){
-				$this->set('students', $this->paginate('Student', array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part', 'full')")));
+				$this->set('students', $this->paginate('Student', array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND dateDeleted IS NULL AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part', 'full')")));
 			}else if(isset($who) && $who == 'pieChart_Unemployed'){
-				$this->set('students', $this->paginate('Student', array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no'")));
+				$this->set('students', $this->paginate('Student', array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND dateDeleted IS NULL AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no'")));
 			}else if(isset($who) && $who == 'pieChart_UnknownWhereAreTheyNow'){
 				$this->set('students', $this->paginate('Student', 
-					array("	Student.ID NOT IN(
+					array("	dateDeleted IS NULL AND Student.ID NOT IN(
 								Select ID from students where graduated = 0 AND graduation_year >= " . date('Y') . "
 								UNION ALL
 								Select ID from students where college = 1 AND graduated_college = 0  and college_graduation_year >= " . date('Y') . "
@@ -61,7 +61,7 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 					)")));
 			}else if(isset($who) && $who == 'unknown'){
 				$this->set('students', $this->paginate('Student', 
-					array("	Student.ID IN (Select id from vw_students_members_and_interns) AND Student.ID NOT IN(
+					array("	dateDeleted IS NULL AND Student.ID IN (Select id from vw_students_members_and_interns) AND Student.ID NOT IN(
 								Select id from vw_students_members_and_interns WHERE graduated = 0 AND dropped_out_of_high_school = 0 AND graduation_year >= " . date('Y') . "
 								UNION
 								Select id from vw_students_members_and_interns WHERE dropped_out_of_high_school = 1 and ged = 0 and college = 0
@@ -78,9 +78,13 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 								UNION
 								Select id from vw_students_members_and_interns WHERE grad_school = 1 AND graduated_grad_school = 1
 					)")));
+			}else if(isset($who) && $who == 'deleted'){
+				$this->set('students', $this->paginate('Student', array("dateDeleted IS NOT NULL")));
 			}else{
-				$this->set('students', $this->paginate('Student'));
+				$this->set('students', $this->paginate('Student', array("dateDeleted IS NULL")));
 			}
+			
+			$this->set('who', $who);
 		}
 	}
 
@@ -234,11 +238,30 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 				throw new NotFoundException(__('Invalid student'));
 			}
 			$this->request->onlyAllow('post', 'delete');
-			if ($this->Student->delete()) {
+			if ($this->Student->saveField('dateDeleted', date('Y-m-d H:i:s'))) {
 				$this->Session->setFlash(__('Student deleted'), 'flash_good');
 				$this->redirect(array('action' => 'index'));
 			}
-			$this->Session->setFlash(__('Student was not deleted'));
+			$this->Session->setFlash(__('Something went wrong, Student was not deleted. Please try again.'));
+			$this->redirect(array('action' => 'index'));
+		}
+	}
+	
+	public function undelete($id = null) {
+		if($this->currentUser == null){
+			$this->Session->setFlash(__('You must log in to do that!'));
+			$this->redirect(array('controller'=>'pages','action' => 'home'));
+		}else{
+			$this->Student->id = $id;
+			if (!$this->Student->exists()) {
+				throw new NotFoundException(__('Invalid student'));
+			}
+			$this->request->onlyAllow('post');
+			if ($this->Student->saveField('dateDeleted', null)) {
+				$this->Session->setFlash(__('Student undeleted'), 'flash_good');
+				$this->redirect(array('action' => 'index'));
+			}
+			$this->Session->setFlash(__('Something went wrong, student was not undeleted. Please try again.'));
 			$this->redirect(array('action' => 'index'));
 		}
 	}
@@ -253,7 +276,7 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 				$searchType = Sanitize::clean($_GET['searchType']);
 			}
 			if (isset($searchString) && isset($searchType) && $searchString != null && $searchType != null) {
-				$conditions = array("$searchType LIKE" => '%' . str_replace(' ', '%', $searchString) . '%');
+				$conditions = array('dateDeleted' => NULL, "$searchType LIKE" => '%' . str_replace(' ', '%', $searchString) . '%');
 			}
 			$results = $this->Paginate('Student', $conditions);
 			$this->set('students', $results);
