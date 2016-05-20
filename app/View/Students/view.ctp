@@ -215,7 +215,12 @@
 			<?php echo h($student['Student']['college_graduation_year']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Which College?'); ?></dt>
+		<dt><?php echo __('Community College?'); ?></dt>
+		<dd>
+			<?php echo h($student['Student']['which_community_college']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Four Year College?'); ?></dt>
 		<dd>
 			<?php echo h($student['Student']['which_college']); ?>
 			&nbsp;
