@@ -78,23 +78,36 @@ $(function () {
                     color: '#000000',
                     connectorColor: '#000000',
                     format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f} %)'
-                }
+                },
+                //events:{
+                //  click: function (event, i) {
+				//	// window.location = "/students/index/<?php echo($argument);?>/" + this.options.ownURL;
+                //    alert(JSON.stringify(this.options.data))
+                //  }
+				//}
             }
         },
         series: [{
             type: 'pie',
             name: 'Student Status',
             data: [
-				['In High School',   <?php echo($membersInHS[0][0]['count(*)']);?>],
-				['Dropped Out Of High School', <?php echo($studentsDroppedOutOfHS[0][0]['count(*)']);?>],
-                ['GED', <?php echo($studentsWithGED[0][0]['count(*)']);?>],
-				['Graduated High School',   <?php echo($studentsGraduatedHS[0][0]['count(*)']);?>],
-				['In College',       <?php echo($studentsWithSomeCollege[0][0]['count(*)']);?>],
-				['Graduated College',       <?php echo($studentsGraduatedCollege[0][0]['count(*)']);?>],
-				['In Grad School',       <?php echo($studentsInGradSchool[0][0]['count(*)']);?>],
-				['Graduated Grad School',       <?php echo($studentsGraduatedGradSchool[0][0]['count(*)']);?>],
-				['Unknown', <?php echo($UnknownEducation);?>]
-            ]
+				{name: 'In High School',  y: <?php echo($membersInHS[0][0]['count(*)']);?>, ownURL: 'inHS'},
+				{name: 'Dropped Out Of High School', y: <?php echo($studentsDroppedOutOfHS[0][0]['count(*)']);?>, ownURL: 'droppedOut'},
+                {name: 'GED', y: <?php echo($studentsWithGED[0][0]['count(*)']);?>, ownURL: 'GED'},
+				{name: 'Graduated High School', y: <?php echo($studentsGraduatedHS[0][0]['count(*)']);?>, ownURL: 'graduatedHS'},
+				{name: 'In College', y: <?php echo($studentsWithSomeCollege[0][0]['count(*)']);?>, ownURL: 'inCollege'},
+				{name: 'Graduated College', y: <?php echo($studentsGraduatedCollege[0][0]['count(*)']);?>, ownURL: 'graduatedCollege'},
+				{name: 'In Grad School', y: <?php echo($studentsInGradSchool[0][0]['count(*)']);?>, ownURL: 'inGradSchool'},
+				{name: 'Graduated Grad School', y: <?php echo($studentsGraduatedGradSchool[0][0]['count(*)']);?>, ownURL: 'graduatedGradSchool'},
+				{name: 'Unknown', y: <?php echo($UnknownEducation);?>, ownURL: 'unknown'}
+            ],
+            point: {
+                events:{
+                  click: function (event, i) {
+                    window.location = "/students/index/<?php echo($argument);?>/" + this.options.ownURL;
+                  }
+                }
+            }
         }]
     });
 	$('#gender_chart_container').highcharts({
@@ -168,6 +181,9 @@ $urlWithoutArguments = substr($url, 0, strpos($url, '/charts'));
 <hr />
 <div id="education_container" style="min-width: 310px; height: 400px"></div>
 <hr />
+
+Instructions: mouse over each wedge to see summary statistics, or click on the wedge to see the list of students included.
+
 <!--
 <div id="where_are_they_now_container" style="min-width: 310px; height: 400px"></div>
 -->
