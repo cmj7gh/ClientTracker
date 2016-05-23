@@ -13,6 +13,7 @@
 			<option value="School.name">School</option>
 			<option value="email">Email</option>
 			<option value="country">Country</option>
+			<option value="student.which_college">College</option>
 		</select>
 	</div>
 		</div>
@@ -48,7 +49,7 @@
 
 	<?php
 		
-		echo $this->Form->input('searchType', array('label' => array('class' => 'control-label'), 'options'=>array('name'=>'Name','School.name'=>'School', 'email'=>'Email','country'=>'Country'), 'style'=>'width: 500px;'));
+		echo $this->Form->input('searchType', array('label' => array('class' => 'control-label'), 'options'=>array('name'=>'Name','School.name'=>'School', 'email'=>'Email','country'=>'Country', 'college'=>'which_college'), 'style'=>'width: 500px;'));
 		echo $this->Form->input('searchString', array('label' => array('class' => 'control-label'), 'style'=>'width: 500px;')); ?>
 		<div class="control-group" style="display: inline-block;">
 			<div class="controls" style="margin: 10px;">
