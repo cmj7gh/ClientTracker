@@ -13,6 +13,7 @@
 			<option value="School.name">School</option>
 			<option value="email">Email</option>
 			<option value="country">Country</option>
+			<option value="student.which_college">College</option>
 		</select>
 	</div>
 		</div>
