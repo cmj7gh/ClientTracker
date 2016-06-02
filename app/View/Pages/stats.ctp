@@ -30,8 +30,14 @@
 					<option value="searchName">Name</option>
 					<option value="School.name">School</option>
 					<option value="email">Email</option>
+					<option value="student.cell_phone">Cell Phone</option>
+					<option value="student.home_phone">Home Phone</option>
 					<option value="country">Country</option>
+					<option value="student.country2">Country 2</option>
 					<option value="student.which_college">College</option>
+					<option value="student.facebook_name">Facebook Name</option>
+					<option value="student.instagram_name">Instagram Name</option>
+					<option value="student.twitter_name">Twitter Name</option>
 				</select>
 			</div>
 		</div>
