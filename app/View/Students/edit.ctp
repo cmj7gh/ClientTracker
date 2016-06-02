@@ -174,6 +174,7 @@
 		</div>
 	<?php
 		echo $this->Form->input('college_graduation_year', array('label' => array('class' => 'control-label'), 'options' => $year_range, 'empty' => 'Select Year'));
+		echo $this->Form->input('which_community_college', array('label' => array('class' => 'control-label')));
 		echo $this->Form->input('which_college', array('label' => array('class' => 'control-label')));
 		echo $this->Form->input('major', array('label' => array('class' => 'control-label')));
 	?>
