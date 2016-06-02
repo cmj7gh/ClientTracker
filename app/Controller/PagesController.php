@@ -98,33 +98,33 @@ class PagesController extends AppController {
 		if($page == 'officer_home'){
 			//birthdays
 			$todayStaffBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name from users where MONTH(birthday) = MONTH(now()) AND DAYOFMONTH(birthday) = DAYOFMONTH(now())");
-			$todayStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name from students where MONTH(birthday) = MONTH(now()) AND DAYOFMONTH(birthday) = DAYOFMONTH(now())");
+			$todayStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name from students where dateDeleted IS NULL AND MONTH(birthday) = MONTH(now()) AND DAYOFMONTH(birthday) = DAYOFMONTH(now())");
 			$nextDay = $this->Student->query("SELECT DAYOFWEEK(DATE_ADD(NOW(), INTERVAL 2 DAY)) as day");
 			$tomorrowStaffBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name from users where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 1 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 1 DAY))");
-			$tomorrowStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name from students where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 1 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 1 DAY))");
+			$tomorrowStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name from students where dateDeleted IS NULL AND MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 1 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 1 DAY))");
 			$nextDayStaffBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name from users where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 2 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 2 DAY))");
-			$nextDayStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name from students where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 2 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 2 DAY))");
+			$nextDayStudentBirthdays = $this->Student->query("Select CONCAT(first_name, ' ' , last_name) as name from students where dateDeleted IS NULL AND MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 2 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 2 DAY))");
 
 			//all LP Students
-			$totalStudentsWorkedWith = $this->Student->query("SELECT count(*) from students");
-			$totalMembers = $this->Student->query("SELECT count(*) from students where civics_status = 'member'");
-			$totalCountries = $this->Student->query("select count(distinct country) from (select country from students union select country2 as country from students) as countries where country is not null and country != '' order by country");
-			$totalInternshipLocations = $this->Student->query("Select count(distinct internship_location) from students");
-			$totalInternsAllTime = $this->Student->query("SELECT count(*) from students where internship_semester_id is not null");
-			$lastSemester = $this->Student->query("Select status from settings where setting='LastSemester'");
+			$totalStudentsWorkedWith = $this->Student->query("SELECT count(*) from students WHERE dateDeleted IS NULL");
+			$totalMembers = $this->Student->query("SELECT count(*) from students where  dateDeleted IS NULL AND civics_status = 'member'");
+			$totalCountries = $this->Student->query("select count(distinct country) from (select country from students where dateDeleted IS NULL union select country2 as country from students where dateDeleted IS NULL) as countries where country is not null and country != '' order by country");
+			$totalInternshipLocations = $this->Student->query("Select count(distinct internship_location) from students where dateDeleted IS NULL");
+			$totalInternsAllTime = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL AND internship_semester_id is not null");
+			$lastSemester = $this->Student->query("Select status from settings where dateDeleted IS NULL AND  setting='LastSemester'");
 			$lastSemesterId = $lastSemester[0]['settings']['status'];
-			$totalStartedLastSemester = $this->Student->query("Select count(*) from students where semester_member = " . $lastSemesterId);
+			$totalStartedLastSemester = $this->Student->query("Select count(*) from students where  dateDeleted IS NULL AND semester_member = " . $lastSemesterId);
 			$totalParticipantsLastSemester = $this->Student->query("Select count(distinct student_id) from meetings join meetings_students on meetings.id = meetings_students.meeting_id where meetings.semester_id = " . $lastSemesterId); 
-			$totalInternsLastSemester = $this->Student->query("SELECT count(*) from students where internship_semester_id = " . $lastSemesterId);
+			$totalInternsLastSemester = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL AND internship_semester_id = " . $lastSemesterId);
 			
 			//data for Pie Charts
-			$studentsInHS = $this->Student->query("Select count(*) from students where graduated = 0 AND graduation_year >= " . date('Y'));
-			$studentsInCollege = $this->Student->query("Select count(*) from students where graduated = 1 AND college = 1 AND graduated_college = 0");
-			$studentsWorking = $this->Student->query("Select count(*) from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed != 'no' ");
-			$studentsUnemployed = $this->Student->query("Select count(*) from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no' ");
+			$studentsInHS = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND graduated = 0 AND graduation_year >= " . date('Y'));
+			$studentsInCollege = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND graduated = 1 AND college = 1 AND graduated_college = 0");
+			$studentsWorking = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed != 'no' ");
+			$studentsUnemployed = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no' ");
 			$other = $totalStudentsWorkedWith[0][0]['count(*)'] - ($studentsInHS[0][0]['count(*)'] + $studentsInCollege[0][0]['count(*)'] + $studentsWorking[0][0]['count(*)'] + $studentsUnemployed[0][0]['count(*)']);
-			$males = $this->Student->query("Select count(*) from students where gender = 'Male'");
-			$females = $this->Student->query("Select count(*) from students where gender = 'Female'");
+			$males = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND gender = 'Male'");
+			$females = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND gender = 'Female'");
 			$unknownGender = $totalStudentsWorkedWith[0][0]['count(*)'] - ($males[0][0]['count(*)'] + $females[0][0]['count(*)'] );
 			
 			
@@ -133,14 +133,14 @@ class PagesController extends AppController {
 			
 			$schoolCount = 0;
 			foreach($mySchools as $school){
-				$mySchools[$schoolCount]['schools']['studentsWorkedWith'] = $this->Student->query("SELECT count(*) from students where school_id = " . $school['schools']['id']);
-				$mySchools[$schoolCount]['schools']['members'] = $this->Student->query("SELECT count(*) from students where civics_status = 'member' AND school_id = " . $school['schools']['id']);
-				$mySchools[$schoolCount]['schools']['countries'] = $this->Student->query("SELECT count(distinct country) from students where school_id = " . $school['schools']['id']);
-				$mySchools[$schoolCount]['schools']['internship_locations'] = $this->Student->query("SELECT count(distinct internship_location) from students where school_id = " . $school['schools']['id']);
-				$mySchools[$schoolCount]['schools']['started_last_semester'] = $this->Student->query("Select count(*) from students where semester_member = " . $lastSemesterId . " AND school_id = ". $school['schools']['id']);
-				$mySchools[$schoolCount]['schools']['participated_last_semester'] = $this->Student->query("Select count(distinct student_id) from meetings join meetings_students on meetings.id = meetings_students.meeting_id join students on students.id = meetings_students.student_id where meetings.semester_id = " . $lastSemesterId . " AND students.school_id = " . $school['schools']['id']); 
-				$mySchools[$schoolCount]['schools']['interns_last_semester'] = $this->Student->query("SELECT count(*) from students where internship_semester_id = " . $lastSemesterId . " AND school_id = ". $school['schools']['id']);
-				$mySchools[$schoolCount]['schools']['interns_all_time'] = $this->Student->query("SELECT count(*) from students where internship_semester_id is not null AND school_id = ". $school['schools']['id']);
+				$mySchools[$schoolCount]['schools']['studentsWorkedWith'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL AND school_id = " . $school['schools']['id']);
+				$mySchools[$schoolCount]['schools']['members'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL AND civics_status = 'member' AND school_id = " . $school['schools']['id']);
+				$mySchools[$schoolCount]['schools']['countries'] = $this->Student->query("SELECT count(distinct country) from students where dateDeleted IS NULL AND school_id = " . $school['schools']['id']);
+				$mySchools[$schoolCount]['schools']['internship_locations'] = $this->Student->query("SELECT count(distinct internship_location) from students where dateDeleted IS NULL AND school_id = " . $school['schools']['id']);
+				$mySchools[$schoolCount]['schools']['started_last_semester'] = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND semester_member = " . $lastSemesterId . " AND school_id = ". $school['schools']['id']);
+				$mySchools[$schoolCount]['schools']['participated_last_semester'] = $this->Student->query("Select count(distinct student_id) from meetings join meetings_students on meetings.id = meetings_students.meeting_id join students on students.id = meetings_students.student_id where students.dateDeleted IS NULL AND meetings.semester_id = " . $lastSemesterId . " AND students.school_id = " . $school['schools']['id']); 
+				$mySchools[$schoolCount]['schools']['interns_last_semester'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL AND internship_semester_id = " . $lastSemesterId . " AND school_id = ". $school['schools']['id']);
+				$mySchools[$schoolCount]['schools']['interns_all_time'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL AND internship_semester_id is not null AND school_id = ". $school['schools']['id']);
 				$schoolCount++;
 			}
 			
@@ -196,19 +196,20 @@ class PagesController extends AppController {
 			//DEPRECATING the "where are they now" chart - we didn't have the data to support it!
 			//data for "Where are they now" Pie Chart
 			$totalStudentsWorkedWith = $this->Student->query("SELECT count(*) from students");
-			$studentsInHS = $this->Student->query("Select count(*) from students where graduated = 0 AND graduation_year >= " . date('Y'));
-			$studentsInCollege = $this->Student->query("Select count(*) from students where college = 1 AND graduated_college = 0 and college_graduation_year >= " . date('Y'));
-			$studentsWorking = $this->Student->query("Select count(*) from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part','full') ");
-			$studentsUnemployed = $this->Student->query("Select count(*) from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no' ");
+			$studentsInHS = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND graduated = 0 AND graduation_year >= " . date('Y'));
+			$studentsInCollege = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND college = 1 AND graduated_college = 0 and college_graduation_year >= " . date('Y'));
+			$studentsWorking = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part','full') ");
+			$studentsUnemployed = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no' ");
 			$other = $totalStudentsWorkedWith[0][0]['count(*)'] - ($studentsInHS[0][0]['count(*)'] + $studentsInCollege[0][0]['count(*)'] + $studentsWorking[0][0]['count(*)'] + $studentsUnemployed[0][0]['count(*)']);
 
 			
 			//data for "Gender" pie chart (not currently displayed)
-			$males = $this->Student->query("Select count(*) from students where gender = 'Male'");
-			$females = $this->Student->query("Select count(*) from students where gender = 'Female'");
+			$males = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND gender = 'Male'");
+			$females = $this->Student->query("Select count(*) from students where dateDeleted IS NULL AND gender = 'Female'");
 			$unknownGender = $totalStudentsWorkedWith[0][0]['count(*)'] - ($males[0][0]['count(*)'] + $females[0][0]['count(*)'] );
 			
 			//data for "Highest Level of Education Attained" pie chart (re-use studentsInHS and studentsInCollege)
+			//These queries all use the view vw_students_members_and_interns - which filters out any students who haven't actually participated in an LP program and any deleted students
 			$totalMemberInterns = $this->Student->query("Select count(*) FROM vw_students_members_and_interns " . $whereClause);
 			$membersInHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND graduated = 0 AND dropped_out_of_high_school = 0 AND graduation_year >= " . date('Y'));
 			$studentsDroppedOutOfHS = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND dropped_out_of_high_school = 1 and ged = 0 and college = 0");
@@ -267,15 +268,15 @@ class PagesController extends AppController {
 			
 			$schoolCount = 0;
 			foreach($mySchools as $school){
-				//$mySchools[$schoolCount]['centers']['studentsWorkedWith'] = $this->Student->query("SELECT count(*) from students where school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['participated_last_semester'] = $this->Student->query("SELECT count(*) from students where school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
-				//$mySchools[$schoolCount]['centers']['members'] = $this->Student->query("SELECT count(*) from students where id in( SELECT student_id from student_semesters) AND school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['countries'] = $this->Student->query("SELECT count(distinct country) from students where school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
-				$mySchools[$schoolCount]['centers']['internship_locations'] = $this->Student->query("SELECT count(distinct internship_location) from students where school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND internship_semester_id IN " . $includedSemesters . " AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
-				$mySchools[$schoolCount]['centers']['started_last_semester'] = $this->Student->query("Select count(*) from students where id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['interns_last_semester'] = $this->Student->query("SELECT count(*) from students where internship_semester_id IN " . $includedSemesters . " AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['interns_all_time'] = $this->Student->query("SELECT count(*) from students where internship_semester_id is not null AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['newMembers'] = $this->Student->query("SELECT count(*) from students where id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") AND school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ')');
+				//$mySchools[$schoolCount]['centers']['studentsWorkedWith'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
+				$mySchools[$schoolCount]['centers']['participated_last_semester'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
+				//$mySchools[$schoolCount]['centers']['members'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and id in( SELECT student_id from student_semesters) AND school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
+				$mySchools[$schoolCount]['centers']['countries'] = $this->Student->query("SELECT count(distinct country) from students where dateDeleted IS NULL and school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
+				$mySchools[$schoolCount]['centers']['internship_locations'] = $this->Student->query("SELECT count(distinct internship_location) from students where dateDeleted IS NULL and school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND internship_semester_id IN " . $includedSemesters . " AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
+				$mySchools[$schoolCount]['centers']['started_last_semester'] = $this->Student->query("Select count(*) from students where dateDeleted IS NULL and id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
+				$mySchools[$schoolCount]['centers']['interns_last_semester'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and internship_semester_id IN " . $includedSemesters . " AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
+				$mySchools[$schoolCount]['centers']['interns_all_time'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and internship_semester_id is not null AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
+				$mySchools[$schoolCount]['centers']['newMembers'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") AND school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ')');
 				$schoolCount++;
 			}
 			
@@ -284,7 +285,7 @@ class PagesController extends AppController {
 				if($_GET['Stat'] == 'AllMembers'){
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
-						where id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") 
+						where dateDeleted IS NULL and id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") 
 						AND school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ")");
 					$i = 0;
 					foreach($valuesRaw as $v){
@@ -294,7 +295,7 @@ class PagesController extends AppController {
 				}elseif($_GET['Stat'] == 'AllStudents'){
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
-						where school_id IN (
+						where dateDeleted IS NULL and school_id IN (
 							SELECT id from schools where center_id = " . $_GET['Center'] . ")");
 				
 					$i = 0;
@@ -305,7 +306,7 @@ class PagesController extends AppController {
 				}elseif($_GET['Stat'] == 'TheseStudents'){
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
-						where school_id  IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
+						where dateDeleted IS NULL and school_id  IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
 						AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
 				
 					$i = 0;
@@ -316,7 +317,7 @@ class PagesController extends AppController {
 				}elseif($_GET['Stat'] == 'TheseMembers'){
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
-						where id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") 
+						where dateDeleted IS NULL and id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") 
 						AND school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ') 
 						AND semester_member IN ' . $includedSemesters );
 				
@@ -328,7 +329,7 @@ class PagesController extends AppController {
 				}elseif($_GET['Stat'] == 'TheseInterns'){
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
-						where internship_semester_id IN " . $includedSemesters . " 
+						where dateDeleted IS NULL and internship_semester_id IN " . $includedSemesters . " 
 						AND school_id  IN (SELECT id from schools where center_id = " . $_GET['Center'] . ")");
 				
 					$i = 0;
@@ -339,7 +340,7 @@ class PagesController extends AppController {
 				}elseif($_GET['Stat'] == 'TheseSites'){
 					$valuesRaw = $this->Student->query(
 						"SELECT distinct internship_location from students 
-						where school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
+						where dateDeleted IS NULL and school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
 						AND id in( SELECT student_id from student_semesters 
 									where semester_id in " . $includedSemesters . ")
 						AND internship_location is not NULL
@@ -354,7 +355,7 @@ class PagesController extends AppController {
 				}elseif($_GET['Stat'] == 'TheseCountries'){
 					$valuesRaw = $this->Student->query(
 						"SELECT distinct country from students 
-						where school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
+						where dateDeleted IS NULL and school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
 						AND id in( SELECT student_id from student_semesters 
 									where semester_id in " . $includedSemesters . ")
 						AND country is not NULL

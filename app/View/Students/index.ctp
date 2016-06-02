@@ -83,7 +83,22 @@
 		<td class="actions">
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $student['Student']['id']), array('class' => 'btn btn-small btn-success')); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $student['Student']['id']), array('class' => 'btn btn-small btn-info')); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $student['Student']['id']), array('class' => 'btn btn-small btn-danger'), __('Are you sure you want to delete # %s?', $student['Student']['id'])); ?>
+			<?php 
+			if($who == 'deleted'){
+				echo $this->Form->postLink(__('Undelete')
+												, array('action' => 'undelete'
+												, $student['Student']['id'])
+												, array('class' => 'btn btn-small btn-danger')
+													, __('Are you sure you want to undelete student %s? \n Deleted students are not included in any searches, charts, and stats, \n before undeleting a student, make sure that their information is all up to date!', $student['Student']['name'])); 
+													
+			}else{
+				echo $this->Form->postLink(__('Delete')
+												, array('action' => 'delete'
+												, $student['Student']['id'])
+												, array('class' => 'btn btn-small btn-danger')
+													, __('Are you sure you want to delete student %s? \n Deleted students will be removed from all searches, charts, and stats, \n but you can always un-delete them later from the \'deleted students\' page.', $student['Student']['name']));
+			} ?>
+		
 		</td>
 	</tr>
 <?php endforeach; ?>
