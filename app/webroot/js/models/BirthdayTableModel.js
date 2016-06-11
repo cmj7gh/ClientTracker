@@ -15,7 +15,7 @@ var BirthdayTableModel = Backbone.Model.extend({
 				return _.map(birthdays, function(element, name) {
 					return {
 						name: element[0]['name'],
-						id: element['students']['id']
+						id: (element['students'] ? element['students']['id'] : (element['users']['id']))
 					}
 				});
 			});
