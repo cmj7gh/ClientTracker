@@ -82,48 +82,28 @@
 		</div>
 	</form>
 </div>
-<script>
-	var includedSemesters = <?php echo json_encode($includedSemesters); ?>
-</script>
-
-</br>
-</br>
-<!--Included Semesters:
-<?php foreach($includedSemestersRaw as $IS){
-	echo("</br>");
-	echo($IS['semesters']['semester'] . ' ' . $IS['semesters']['year']);
-	}?>
--->
 <table class="table table-striped">
 <tr>
 	<th>School</th>
-	<!--
-		<th>Members</br>[All Time]</th>
-		<th>Students Worked With</br>[All Time]</th>
-	-->
 	<th>Participants</br>[These Semsters]</th>
 	<th>New Members</br>[These Semesters]</th>
 	<th>Interns</br>[These Semsters]</th>
 	<th>Internship Sites</br>[These Semesters]</th>
 	<th>Countries Represented</br>[These Semesters]</th></tr>
-<?php foreach($mySchools as $school){
+<?php foreach($myPrograms as $program){
 	echo("<tr>");
 	echo("<td>");
-	echo($school['centers']['title'] . "</br>");
-	//echo("</td><td>");
-	//echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=AllMembers'>" . $school['centers']['members'][0][0]['count(*)'] . "</a>");
-	//echo("</td><td>");
-	//echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=AllStudents'>" .$school['centers']['studentsWorkedWith'][0][0]['count(*)'] . "</a>");
+	echo($program['programs']['name'] . "</br>");
 	echo("</td><td>");
-	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=TheseStudents'>" .$school['centers']['participated_last_semester'][0][0]['count(*)'] . "</a>");
+	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Program=" . $program['programs']['id'] . "&Stat=TheseStudents'>" . $program['programs']['participated_last_semester'][0][0]['participated_students'] . "</a>");
 	echo("</td><td>");
-	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=TheseMembers'>" .$school['centers']['newMembers'][0][0]['count(*)'] . "</a>");
+	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Program=" . $program['programs']['id'] . "&Stat=TheseMembers'>" .$program['programs']['new_members'][0][0]['new_members'] . "</a>");
 	echo("</td><td>");
-	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=TheseInterns'>" .$school['centers']['interns_last_semester'][0][0]['count(*)'] . "</a>");
+	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Program=" . $program['programs']['id'] . "&Stat=TheseInterns'>" .$program['programs']['interns_last_semester'][0][0]['interned_last_sem'] . "</a>");
 	echo("</td><td>");
-	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=TheseSites'>" .$school['centers']['internship_locations'][0][0]['count(distinct internship_location)'] . "</a>");
+	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Program=" . $program['programs']['id'] . "&Stat=TheseSites'>" .$program['programs']['internship_locations'][0][0]['internship_locations'] . "</a>");
 	echo("</td><td>");
-	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Center=" . $school['centers']['id'] . "&Stat=TheseCountries'>" .$school['centers']['countries'][0][0]['count(distinct country)'] . "</a>");
+	echo("<a href='stats?StartSemester=" . $startSemester . "&EndSemester=" . $EndSemester . "&Program=" . $program['programs']['id'] . "&Stat=TheseCountries'>" .$program['programs']['countries'][0][0]['countries_represented'] . "</a>");
 	echo("</td>");
 	echo("</tr>");
 
@@ -155,18 +135,18 @@ echo("Distinct ");
 				echo 'Countries Of Origin';
 				break;
 		}
-echo( " For " . $mySchools[$_GET['Center']-1]['centers']['title'] );
+echo( " For " . $myPrograms[$_GET['Program']-1]['programs']['name'] );
 echo( " Between " );
 
 			foreach($semesters as $sem){
-				if(isset($_GET['StartSemester']) && $_GET['StartSemester'] == $sem['semesters']['id']){
-					echo($sem['semesters']['semester'] . " " . $sem['semesters']['year']);
+				if(isset($_GET['StartSemester']) && $_GET['StartSemester'] == $sem['id']){
+					echo($sem['semester'] . " " . $sem['year']);
 			}
 			}
 echo(" and ");			
 			foreach($semesters as $sem){
-				if(isset($_GET['EndSemester']) && $_GET['EndSemester'] == $sem['semesters']['id']){
-					echo($sem['semesters']['semester'] . " " . $sem['semesters']['year']);
+				if(isset($_GET['EndSemester']) && $_GET['EndSemester'] == $sem['id']){
+					echo($sem['semester'] . " " . $sem['year']);
 			}
 			}
 echo("</br>");

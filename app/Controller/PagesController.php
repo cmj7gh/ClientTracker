@@ -43,7 +43,7 @@ class PagesController extends AppController {
  *
  * @var array
  */
-	public $uses = array('Student', 'Semester', 'Birthday');
+	public $uses = array('Student', 'Semester', 'StudentSemester', 'Birthday');
 
 /**
  * Displays a view
@@ -241,16 +241,11 @@ class PagesController extends AppController {
 			$EndSemester = $this->currentSemester;
 			if(isset($_GET['EndSemester'])){
 				$EndSemester = $_GET['EndSemester'];
-			}			
-			$includedSemestersRaw = $this->Student->query("Select * From semesters where startingDate >= (select startingDate from semesters where id = " . $startSemester . ") AND startingDate <= (select startingDate from semesters where id = " . $EndSemester . ")");
-
-			
-			$includedSemesters = '(';
-				foreach($includedSemestersRaw as $I_S){
-				$includedSemesters = $includedSemesters . $I_S['semesters']['id'] . ',';
 			}
-			$includedSemesters = substr($includedSemesters,0,-1) . ')';
-			$semesters = $this->Student->query("SELECT * From semesters order by year, semester");
+			$includedSemesters = $this->Semester->getSemesterRangeString($startSemester, $EndSemester);
+			$studentSemesters = $this->StudentSemester->getStudentSemestersList($includedSemesters);
+			$semesters = $this->Semester->getAllSemesters();
+
 			$StatsType = 'Total';
 			if(isset($_GET['StatsType'])){
 				$StatsType = $_GET['StatsType'];
@@ -260,33 +255,27 @@ class PagesController extends AppController {
 				$which = $_GET['which'];
 			}			
 			
+			$myPrograms = $this->Student->query("SELECT id, name from programs");
 
-			$mySchools = $this->Student->query("SELECT centers.id, centers.title from centers");
-			//die(var_dump($mySchools));
-			//Find Schools
-			//$mySchools = $this->Student->query("SELECT schools.id, schools.name from schools JOIN users_centers on schools.center_id = users_centers.center_id WHERE users_centers.user_id = " . $this->currentUser['id']);
-			
-			$schoolCount = 0;
-			foreach($mySchools as $school){
-				//$mySchools[$schoolCount]['centers']['studentsWorkedWith'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['participated_last_semester'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
-				//$mySchools[$schoolCount]['centers']['members'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and id in( SELECT student_id from student_semesters) AND school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['countries'] = $this->Student->query("SELECT count(distinct country) from students where dateDeleted IS NULL and school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
-				$mySchools[$schoolCount]['centers']['internship_locations'] = $this->Student->query("SELECT count(distinct internship_location) from students where dateDeleted IS NULL and school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ") AND internship_semester_id IN " . $includedSemesters . " AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
-				$mySchools[$schoolCount]['centers']['started_last_semester'] = $this->Student->query("Select count(*) from students where dateDeleted IS NULL and id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['interns_last_semester'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and internship_semester_id IN " . $includedSemesters . " AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['interns_all_time'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and internship_semester_id is not null AND school_id  IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ")");
-				$mySchools[$schoolCount]['centers']['newMembers'] = $this->Student->query("SELECT count(*) from students where dateDeleted IS NULL and id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") AND school_id IN (SELECT id from schools where center_id = " . $school['centers']['id'] . ')');
-				$schoolCount++;
+			$programCount = 0;
+			foreach($myPrograms as $program) {
+				$myPrograms[$programCount]['programs']['participated_last_semester'] = $this->Student->query("SELECT count(*) AS participated_students FROM students WHERE dateDeleted IS NULL AND school_id IN (SELECT school_id FROM programs_schools WHERE program_id = " . $program['programs']['id'] . ") AND id in " . $studentSemesters);
+				$myPrograms[$programCount]['programs']['countries'] = $this->Student->query("SELECT count(distinct country) AS countries_represented FROM students WHERE dateDeleted IS NULL AND school_id IN (SELECT school_id FROM programs_schools WHERE program_id = " . $program['programs']['id'] . ") AND id in " . $studentSemesters);
+                $myPrograms[$programCount]['programs']['internship_locations'] = $this->Student->query("SELECT count(distinct internship_location) AS internship_locations FROM students WHERE dateDeleted IS NULL AND school_id IN (SELECT school_id FROM programs_schools WHERE program_id = " . $program['programs']['id'] . ") AND internship_semester_id IN " . $includedSemesters . " AND id IN " . $studentSemesters);
+				$myPrograms[$programCount]['programs']['started_last_semester'] = $this->Student->query("SELECT count(*) AS started_last_sem FROM students WHERE dateDeleted IS NULL AND id IN (SELECT student_id FROM student_earliest_semester WHERE semester_id IN " . $includedSemesters . ") AND school_id IN (SELECT school_id from programs_schools where program_id = " . $program['programs']['id'] . ")");
+                $myPrograms[$programCount]['programs']['interns_last_semester'] = $this->Student->query("SELECT count(*) AS interned_last_sem FROM students WHERE dateDeleted IS NULL AND internship_semester_id IN " . $includedSemesters . " AND school_id IN (SELECT school_id FROM programs_schools WHERE program_id = " . $program['programs']['id'] . ")");
+				$myPrograms[$programCount]['programs']['interns_all_time'] = $this->Student->query("SELECT count(*) AS all_time_interns FROM students WHERE dateDeleted IS NULL AND internship_semester_id IS NOT NULL AND school_id IN (SELECT school_id FROM programs_schools WHERE program_id = ". $program['programs']['id'] . ")");
+				$myPrograms[$programCount]['programs']['new_members'] = $this->Student->query("SELECT count(*) AS new_members FROM students WHERE datedeleted IS NULL and id IN (SELECT student_id from student_earliest_semester WHERE semester_id IN " . $includedSemesters . ") AND school_id IN (SELECT school_id FROM programs_schools WHERE program_id = " . $program['programs']['id'] . ")");
+				$programCount++;
 			}
-			
+
 			//These queries are pulled when anyone clicks on the numbers in the stats table. It shows an actual list of the students in that stat.
-			if(isset($_GET['Center']) && isset($_GET['Stat'])){
+			if(isset($_GET['Program']) && isset($_GET['Stat'])){
 				if($_GET['Stat'] == 'AllMembers'){
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
 						where dateDeleted IS NULL and id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") 
-						AND school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ")");
+						AND school_id IN (SELECT school_id from programs_schools where program_id = " . $_GET['Program'] . ")");
 					$i = 0;
 					foreach($valuesRaw as $v){
 						$values[$i] = '<a href=\'../students/view/' . $v['students']['id'] . '\'> ' . $v[0]['CONCAT(first_name, \' \', last_name)'] . '</a>';
@@ -296,7 +285,7 @@ class PagesController extends AppController {
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
 						where dateDeleted IS NULL and school_id IN (
-							SELECT id from schools where center_id = " . $_GET['Center'] . ")");
+							SELECT school_id from programs_schools where program_id = " . $_GET['Program'] . ")");
 				
 					$i = 0;
 					foreach($valuesRaw as $v){
@@ -306,7 +295,7 @@ class PagesController extends AppController {
 				}elseif($_GET['Stat'] == 'TheseStudents'){
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
-						where dateDeleted IS NULL and school_id  IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
+						where dateDeleted IS NULL and school_id  IN (SELECT school_id from programs_schools where program_id = " . $_GET['Program'] . ")
 						AND id in( SELECT student_id from student_semesters where semester_id in " . $includedSemesters . ")");
 				
 					$i = 0;
@@ -318,7 +307,7 @@ class PagesController extends AppController {
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
 						where dateDeleted IS NULL and id in (select student_id from student_earliest_semester where semester_id IN " . $includedSemesters . ") 
-						AND school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ') 
+						AND school_id IN (SELECT school_id from programs_schools where program_id = " . $_GET['Program'] . ')
 						AND semester_member IN ' . $includedSemesters );
 				
 					$i = 0;
@@ -330,7 +319,7 @@ class PagesController extends AppController {
 					$valuesRaw = $this->Student->query(
 						"SELECT id, CONCAT(first_name, ' ', last_name) from students 
 						where dateDeleted IS NULL and internship_semester_id IN " . $includedSemesters . " 
-						AND school_id  IN (SELECT id from schools where center_id = " . $_GET['Center'] . ")");
+						AND school_id  IN (SELECT school_id from programs_schools where program_id = " . $_GET['Program'] . ")");
 				
 					$i = 0;
 					foreach($valuesRaw as $v){
@@ -340,7 +329,7 @@ class PagesController extends AppController {
 				}elseif($_GET['Stat'] == 'TheseSites'){
 					$valuesRaw = $this->Student->query(
 						"SELECT distinct internship_location from students 
-						where dateDeleted IS NULL and school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
+						where dateDeleted IS NULL and school_id IN (SELECT school_id from programs_schools where program_id = " . $_GET['Program'] . ")
 						AND id in( SELECT student_id from student_semesters 
 									where semester_id in " . $includedSemesters . ")
 						AND internship_location is not NULL
@@ -355,7 +344,7 @@ class PagesController extends AppController {
 				}elseif($_GET['Stat'] == 'TheseCountries'){
 					$valuesRaw = $this->Student->query(
 						"SELECT distinct country from students 
-						where dateDeleted IS NULL and school_id IN (SELECT id from schools where center_id = " . $_GET['Center'] . ") 
+						where dateDeleted IS NULL and school_id IN (SELECT school_id from programs_schools where program_id = " . $_GET['Program'] . ")
 						AND id in( SELECT student_id from student_semesters 
 									where semester_id in " . $includedSemesters . ")
 						AND country is not NULL
@@ -370,7 +359,7 @@ class PagesController extends AppController {
 				}
 			}
 			
-			$this->set(compact('semesters', 'totalStudentsWorkedWith', 'totalMembers', 
+			$this->set(compact('semesters', 'myPrograms', 'totalStudentsWorkedWith','totalMembers',
 								'totalCountries', 'totalInternshipLocations',
 								'todayStaffBirthdays', 'todayStudentBirthdays', 
 								'nextDay', 'tomorrowStaffBirthdays', 
@@ -379,9 +368,9 @@ class PagesController extends AppController {
 								'totalStartedLastSemester', 'totalParticipantsLastSemester',
 								'totalInternsLastSemester', 'totalInternsAllTime',
 								'studentsInHS','studentsInCollege','studentsWorking',
-								'studentsUnemployed','other', 'includedSemestersRaw',
+								'studentsUnemployed','other',
 								'males', 'females', 'unknownGender', 'values',
-								'startSemester', 'EndSemester', 'includedSemesters'));
+								'startSemester', 'EndSemester'));
 		}
 		
 		$this->set(compact('page', 'subpage', 'title_for_layout'));
