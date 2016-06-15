@@ -48,9 +48,6 @@
 		<th><?php echo __('Birthday'); ?></th>
 		<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
-	<script>
-		var Students = <?php echo json_encode($school['Student']); ?>;
-	</script>
 	<?php
 		$i = 0;
 		foreach ($school['Student'] as $student): ?>
