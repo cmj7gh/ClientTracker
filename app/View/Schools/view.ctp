@@ -42,11 +42,15 @@
 		<th><?php echo __('First Name'); ?></th>
 		<th><?php echo __('Last Name'); ?></th>
 		<th><?php echo __('Email'); ?></th>
-		<th><?php echo __('Phone'); ?></th>
+		<th><?php echo __('Home Phone'); ?></th>
+		<th><?php echo __('Cell Phone'); ?></th>
 		<th><?php echo __('Country'); ?></th>
 		<th><?php echo __('Birthday'); ?></th>
 		<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
+	<script>
+		var Students = <?php echo json_encode($school['Student']); ?>;
+	</script>
 	<?php
 		$i = 0;
 		foreach ($school['Student'] as $student): ?>
@@ -54,7 +58,8 @@
 			<td><?php echo $student['first_name']; ?></td>
 			<td><?php echo $student['last_name']; ?></td>
 			<td><?php echo $student['email']; ?></td>
-			<td><?php echo $student['phone']; ?></td>
+			<td><?php echo ($student['home_phone'] ? $student['home_phone'] : 'None'); ?></td>
+			<td><?php echo ($student['cell_phone'] ? $student['cell_phone'] : 'None'); ?></td>
 			<td><?php echo $student['country']; ?></td>
 			<td><?php echo $student['birthday']; ?></td>
 			<td class="actions">
