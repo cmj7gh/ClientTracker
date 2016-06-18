@@ -22,6 +22,10 @@ class StudentSemester extends AppModel {
     // Returns a well-formatted SQL list of semesters
     public function getStudentSemestersList($includedSemesters) {
         $studentSemesters = $this->getStudentSemesters($includedSemesters);
-        return '(' . join(',', $studentSemesters) . ')';
+        $result = join(',', $studentSemesters);
+        if (count($studentSemesters) == 0) {
+            $result = 'NULL';
+        }
+        return '(' . $result . ')';
     }
 }
