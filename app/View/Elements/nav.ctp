@@ -26,6 +26,7 @@
 							<li><?php echo $this->Html->link(('Everyone'), array('controller' => 'students', 'action' => 'index', 'all')); ?></li>
 							<li><?php echo $this->Html->link(('LP Alumni'), array('controller' => 'students', 'action' => 'index', 'alumni')); ?></li>
 							<li><?php echo $this->Html->link(('Deleted Students'), array('controller' => 'students', 'action' => 'index', 'deleted')); ?></li>
+							<li><?php echo $this->Html->link(('Unknown Students'), array('controller' => 'students', 'action' => 'index', 'unknown')); ?></li>
 						</ul>
 					</li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
