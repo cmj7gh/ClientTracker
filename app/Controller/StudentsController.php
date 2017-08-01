@@ -31,26 +31,52 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 					$school_ids[] = $s['users_schools']['school_id'];
 				}
 				//var_dump($school_ids);
-				$this->set('students', $this->paginate('Student', array('Student.school_id IN' => $school_ids, 'graduated' =>false, 'civics_status !=' => 'none', 'dateDeleted' => NULL)));
+				//$this->set('students', $this->paginate('Student', array('Student.school_id IN' => $school_ids, 'graduated' =>false, 'civics_status !=' => 'none', 'dateDeleted' => NULL)));
+				$options = array('Student.school_id IN' => $school_ids, 'graduated' =>false, 'civics_status !=' => 'none', 'dateDeleted' => NULL);
 			}else if(isset($who) && $who == 'alumni'){
-				$this->set('students', $this->paginate('Student', array('graduated'=>true, 'civics_status'=>'member', 'dateDeleted' => NULL)));
+				//$this->set('students', $this->paginate('Student', array('graduated'=>true, 'civics_status'=>'member', 'dateDeleted' => NULL)));
+				$options = array('graduated'=>true, 'civics_status'=>'member', 'dateDeleted' => NULL);
 			}else if(isset($who) && $who == 'started'){
-				$this->set('students', $this->paginate('Student', array('civics_status != '=>'member', 'dateDeleted' => NULL)));
+				//$this->set('students', $this->paginate('Student', array('civics_status != '=>'member', 'dateDeleted' => NULL)));
+				$options = array('civics_status != '=>'member', 'dateDeleted' => NULL);
 			}else if(isset($who) && $who == 'members'){
-				$this->set('students', $this->paginate('Student', array('civics_status'=>'member', 'dateDeleted' => NULL)));
+				//$this->set('students', $this->paginate('Student', array('student.id IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL')));
+				$options = array('student.id IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL');
+			}else if(isset($who) && $who == 'interns'){
+				//$this->set('students', $this->paginate('Student', array('internship_semester_id IS NOT NULL and dateDeleted IS NULL')));
+				$options = array('internship_semester_id IS NOT NULL and dateDeleted IS NULL');
+			}else if(isset($who) && $who == 'internsOnly'){
+				//$this->set('students', $this->paginate('Student', array("student.id NOT IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL AND internship_semester_id IS NOT NULL")));
+				$options = array("student.id NOT IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL AND internship_semester_id IS NOT NULL");
+			}else if(isset($who) && $who == 'other'){
+				//$this->set('students', $this->paginate('Student', array("student.id NOT IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL AND internship_semester_id IS NULL")));
+				$options = array("student.id NOT IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL AND internship_semester_id IS NULL");
 			}
 			//these options are linked from wedges in the pie chart
 			else if(isset($who) && $who == 'pieChart_inHS'){
-				$this->set('students', $this->paginate('Student', array('graduated = 0 AND dateDeleted IS NULL AND graduation_year >= ' . date('Y'))));
+				//$this->set('students', $this->paginate('Student', array('graduated = 0 AND dateDeleted IS NULL AND graduation_year >= ' . date('Y'))));
+				$options = array('graduated = 0 AND dateDeleted IS NULL AND graduation_year >= ' . date('Y'));
 			}else if(isset($who) && $who == 'pieChart_inCollege'){
-				$this->set('students', $this->paginate('Student', array('college = 1 AND dateDeleted IS NULL  AND graduated_college = 0 and college_graduation_year >= ' . date('Y'))));
+				//$this->set('students', $this->paginate('Student', array('college = 1 AND dateDeleted IS NULL  AND graduated_college = 0 and college_graduation_year >= ' . date('Y'))));
+				$options = array('college = 1 AND dateDeleted IS NULL  AND graduated_college = 0 and college_graduation_year >= ' . date('Y'));
 			}else if(isset($who) && $who == 'pieChart_Working'){
-				$this->set('students', $this->paginate('Student', array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND dateDeleted IS NULL AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part', 'full')")));
+				//$this->set('students', $this->paginate('Student', array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND dateDeleted IS NULL AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part', 'full')")));
+				$options = array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND dateDeleted IS NULL AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part', 'full')");
 			}else if(isset($who) && $who == 'pieChart_Unemployed'){
-				$this->set('students', $this->paginate('Student', array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND dateDeleted IS NULL AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no'")));
+				//$this->set('students', $this->paginate('Student', array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND dateDeleted IS NULL AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no'")));
+				$options = array("(graduated = 1 OR graduation_year < " . date('Y') . ") AND dateDeleted IS NULL AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no'");
 			}else if(isset($who) && $who == 'pieChart_UnknownWhereAreTheyNow'){
-				$this->set('students', $this->paginate('Student', 
-					array("	dateDeleted IS NULL AND Student.ID NOT IN(
+				//$this->set('students', $this->paginate('Student', 
+				//	array("	dateDeleted IS NULL AND Student.ID NOT IN(
+				//				Select ID from students where graduated = 0 AND graduation_year >= " . date('Y') . "
+				//				UNION ALL
+				//				Select ID from students where college = 1 AND graduated_college = 0  and college_graduation_year >= " . date('Y') . "
+				//				UNION ALL
+				//				Select ID from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part', 'full')
+				//				UNION ALL
+				//				Select ID from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no'
+				//	)")));
+				$options = array("	dateDeleted IS NULL AND Student.ID NOT IN(
 								Select ID from students where graduated = 0 AND graduation_year >= " . date('Y') . "
 								UNION ALL
 								Select ID from students where college = 1 AND graduated_college = 0  and college_graduation_year >= " . date('Y') . "
@@ -58,10 +84,27 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 								Select ID from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed IN ('part', 'full')
 								UNION ALL
 								Select ID from students where (graduated = 1 OR graduation_year < " . date('Y') . ") AND (college = 0 OR (college = 1 AND graduated_college = 1)) AND employed = 'no'
-					)")));
+					)");
 			}else if(isset($who) && $who == 'unknown'){
-				$this->set('students', $this->paginate('Student', 
-					array("	dateDeleted IS NULL AND Student.ID IN (Select id from vw_students_members_and_interns) AND Student.ID NOT IN(
+				//$this->set('students', $this->paginate('Student', 
+				//	array("	dateDeleted IS NULL AND Student.ID IN (Select id from vw_students_members_and_interns) AND Student.ID NOT IN(
+				//				Select id from vw_students_members_and_interns WHERE graduated = 0 AND dropped_out_of_high_school = 0 AND graduation_year >= " . date('Y') . "
+				//				UNION
+				//				Select id from vw_students_members_and_interns WHERE dropped_out_of_high_school = 1 and ged = 0 and college = 0
+				//				UNION
+				//				Select id from vw_students_members_and_interns WHERE ged = 1 and college = 0
+				//				UNION
+				//				Select id from vw_students_members_and_interns WHERE graduated = 1 and college = 0
+				//				UNION
+				//				Select id from vw_students_members_and_interns WHERE college = 1 AND graduated_college = 0 and grad_school = 0
+				//				UNION
+				//				Select id from vw_students_members_and_interns WHERE graduated_college = 1 and grad_school = 0
+				//				UNION
+				//				Select id from vw_students_members_and_interns WHERE grad_school = 1 AND graduated_grad_school = 0
+				//				UNION
+				//				Select id from vw_students_members_and_interns WHERE grad_school = 1 AND graduated_grad_school = 1
+				//	)")));
+				$options = array("	dateDeleted IS NULL AND Student.ID IN (Select id from vw_students_members_and_interns) AND Student.ID NOT IN(
 								Select id from vw_students_members_and_interns WHERE graduated = 0 AND dropped_out_of_high_school = 0 AND graduation_year >= " . date('Y') . "
 								UNION
 								Select id from vw_students_members_and_interns WHERE dropped_out_of_high_school = 1 and ged = 0 and college = 0
@@ -77,17 +120,70 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 								Select id from vw_students_members_and_interns WHERE grad_school = 1 AND graduated_grad_school = 0
 								UNION
 								Select id from vw_students_members_and_interns WHERE grad_school = 1 AND graduated_grad_school = 1
-					)")));
+					)");
 			}else if(isset($who) && $who == 'deleted'){
-				$this->set('students', $this->paginate('Student', array("dateDeleted IS NOT NULL")));
+				//$this->set('students', $this->paginate('Student', array("dateDeleted IS NOT NULL")));
+				$options = array("dateDeleted IS NOT NULL");
 			}else{
-				$this->set('students', $this->paginate('Student', array("dateDeleted IS NULL")));
+				//$this->set('students', $this->paginate('Student', array("dateDeleted IS NULL")));
+				$options = array("dateDeleted IS NULL");
 			}
 			
-			$this->set('who', $who);
+			
+			
+			if (empty($this->request->params['named']['export'])) {
+				$this->set('students', $this->paginate('Student', $options));
+				$this->set('who', $who);
+			} else {
+				$this->csv($this->paginate('Student', $options));
+			}
 		}
 	}
 
+/**
+ * csv method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */	
+	public function csv($results) {
+		//die(var_dump($results));
+	
+		ini_set('max_execution_time', 600); //increase max_execution_time to 10 min if data set is very large
+		//create a file
+		$filename = "export_".date("Y.m.d").".csv";
+		$csv_file = fopen('php://output', 'w');
+
+		header('Content-type: application/csv');
+		header('Content-Disposition: attachment; filename="'.$filename.'"');
+		// Column headings
+		$header_row = array("Name", "School", "Email", "Cell Phone", "Country", "Graduated", "Facebook Name", "Employer", "Graduation Year", "University");
+		fputcsv($csv_file,$header_row,',','"');
+
+		// Loop to create CSV file rows
+		foreach($results as $result)
+		{
+			// Array indexes correspond to the field names in your db table(s)
+			$row = array(
+				$result['Student']['name'], //TODO: add nickname here where appropriate (copy logic from students idnex
+				$result['School']['name'],
+				$result['Student']['email'],
+				$result['Student']['cell_phone'],
+				$result['Student']['country'],
+				$result['Student']['graduated'],
+				$result['Student']['facebook_name'],
+				$result['Student']['where_employed'],
+				$result['Student']['graduation_year'],
+				$result['Student']['which_college']
+			);
+
+			fputcsv($csv_file,$row,',','"');
+		}
+
+		fclose($csv_file);
+		die();
+	}
 /**
  * view method
  *

@@ -27,7 +27,8 @@
 			</div>
 		</div>
 </form>
-	
+</br></br>
+<?=$this->Html->link('Export this page to a CSV',$this->here . "/export:true")?>	
 	
 	
 	

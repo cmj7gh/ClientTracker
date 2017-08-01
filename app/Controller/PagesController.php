@@ -220,6 +220,8 @@ class PagesController extends AppController {
 			//$studentsDidNotCompleteCollege = $this->Student->query("Select count(*) from vw_students_members_and_interns where college = 1 AND graduated_college = 0 and college_graduation_year < " . date('Y'));
 			$studentsInGradSchool = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND grad_school = 1 AND graduated_grad_school = 0");
 			$studentsGraduatedGradSchool = $this->Student->query("Select count(*) from vw_students_members_and_interns ". $whereClause . " AND grad_school = 1 AND graduated_grad_school = 1");
+			$nonMembersInterns = $this->Student->query("Select count(*) from students ". $whereClause . " AND dateDeleted IS NULL AND id not in (select id from vw_students_members_and_interns)" );
+			
 			$UnknownEducation = $totalMemberInterns[0][0]['count(*)'] - ($membersInHS[0][0]['count(*)']
 																				+ $studentsDroppedOutOfHS[0][0]['count(*)']
 																				+ $studentsWithGED[0][0]['count(*)']
@@ -231,7 +233,7 @@ class PagesController extends AppController {
 			
 			$this->set(compact('studentsInHS','studentsInCollege','totalMemberInterns','membersInHS','studentsWorking','studentsUnemployed','other','males','females','unknownGender'
 								,'studentsDroppedOutOfHS','studentsWithGED','studentsGraduatedHS','studentsGraduatedCollege','studentsInGradSchool','studentsGraduatedGradSchool'
-								,'studentsWithSomeCollege','UnknownEducation','argument','textForChartHeader'));
+								,'studentsWithSomeCollege','UnknownEducation','argument','textForChartHeader','nonMembersInterns'));
 		}
 		if($page == 'stats'){
 			$startSemester = $this->currentSemester;

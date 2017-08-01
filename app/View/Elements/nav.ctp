@@ -21,8 +21,11 @@
 						<ul class="dropdown-menu">
 							<li><?php echo $this->Html->link(('Add a Student'), array('controller' => 'students', 'action' => 'add')); ?></li>
 							<li><?php echo $this->Html->link(('Youth at Your Schools'), array('controller' => 'students', 'action' => 'index', 'my')); ?></li>
-							<li><?php echo $this->Html->link(('All LP Members'), array('controller' => 'students', 'action' => 'index', 'members')); ?></li>
-							<li><?php echo $this->Html->link(('Youth Who Have Started LP Programs But Are Not Members'), array('controller' => 'students', 'action' => 'index', 'started')); ?></li>
+							<li><?php echo $this->Html->link(('Program Participants'), array('controller' => 'students', 'action' => 'index', 'members')); ?></li>
+							<li><?php echo $this->Html->link(('Interns'), array('controller' => 'students', 'action' => 'index', 'interns')); ?></li>
+							<li><?php echo $this->Html->link(('Interns Only'), array('controller' => 'students', 'action' => 'index', 'internsOnly')); ?></li>
+							<!--<li><?php echo $this->Html->link(('Youth Who Have Started LP Programs But Are Not Members'), array('controller' => 'students', 'action' => 'index', 'started')); ?></li>-->
+							<li><?php echo $this->Html->link(('Other Students'), array('controller' => 'students', 'action' => 'index', 'other')); ?></li>
 							<li><?php echo $this->Html->link(('Everyone'), array('controller' => 'students', 'action' => 'index', 'all')); ?></li>
 							<li><?php echo $this->Html->link(('LP Alumni'), array('controller' => 'students', 'action' => 'index', 'alumni')); ?></li>
 							<li><?php echo $this->Html->link(('Deleted Students'), array('controller' => 'students', 'action' => 'index', 'deleted')); ?></li>

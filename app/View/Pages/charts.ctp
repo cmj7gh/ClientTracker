@@ -13,51 +13,12 @@
   background-color: #ebebeb;
 }
 </style>
+
 <script>
 $(function () {
-    $('#where_are_they_now_container').highcharts({
-        chart: {
-			renderTo: 'chart_container',
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-        },
-        title: {
-            text: 'Where They Are Now'
-        },
-        tooltip: {
-    	    pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f} %)'
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Student Status',
-            data: [
-                ['In High School',   <?php echo($studentsInHS[0][0]['count(*)']);?>],
-                ['In College',       <?php echo($studentsInCollege[0][0]['count(*)']);?>],
-                {
-                    name: 'Working',
-                    y: <?php echo($studentsWorking[0][0]['count(*)']);?>,
-                    selected: true
-                },
-                ['Unemployed',    <?php echo($studentsUnemployed[0][0]['count(*)']);?>],
-				['Unknown', <?php echo($other);?>]
-            ]
-        }]
-    });
-	$('#education_container').highcharts({
-        chart: {
+	var chart;
+	var defaultOptions = {
+	    chart: {
 			renderTo: 'chart_container',
             plotBackgroundColor: null,
             plotBorderWidth: null,
@@ -96,48 +57,33 @@ $(function () {
 				['Unknown', <?php echo($UnknownEducation);?>]
             ]
         }]
-    });
-	$('#gender_chart_container').highcharts({
-        chart: {
-			renderTo: 'chart_container',
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-        },
-        title: {
-            text: 'Gender'
-        },
-        tooltip: {
-    	    pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f} %)'
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Student Status',
-            data: [
-                ['Male',   <?php echo($males[0][0]['count(*)']);?>],
-                {
-                    name: 'Female',
-                    y: <?php echo($females[0][0]['count(*)']);?>,
-                    sliced: true,
-                    selected: true
-                },
-				['Unknown', <?php echo($unknownGender);?>]
-            ]
-        }]
-    });
+	};
+
+	
+	function drawDefaultChart() {
+		chart = Highcharts.chart('education_container',defaultOptions);
+	}
+	
+	drawDefaultChart();
+
+	$('#toggleInHS').click(function () {
+	
+		var keys = Object.keys(chart.series[0].data);
+	
+		console.log(keys.length);
+        if(keys.length === 9){ //there should be 9 wedges if we haven't yet removed IN HS
+			chart.series[0].removePoint(0);
+		}else{
+			//chart.destroy();
+			//chart1 = Highcharts.chart('education_container',defaultOptions);
+			//reloading the whole page is kind of annoying, but I can't find another way to get it to work.
+			//the code above should work, but it's redrawing the page with the HS wedge removed.
+			location.reload();
+		}
+	});
 });
+
+
 </script>
 
 <?php //get the current URL so that we can use it to build the links below (relative links don't work because of the case where we're just on the page /charts/ )
@@ -164,9 +110,15 @@ $urlWithoutArguments = substr($url, 0, strpos($url, '/charts'));
 	<a href="/pages/charts/alexandria" class="btn btn-default" <?php IF($argument=='alexandria'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>City of Alexandria</a>
 	<a href="/pages/charts/fairfax" class="btn btn-default" <?php IF($argument=='fairfax'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Fairfax County</a>
   </div>
+  <div class="btn-group" role="group" aria-label="...">
+	<button id="toggleInHS" class="btn btn-default" style="margin: auto;">Add/Remove 'In High School'</button>
+  </div>
 </div>
 <hr />
 <div id="education_container" style="min-width: 310px; height: 400px"></div>
+<div class="well well-small" style="width: 50%; margin: auto; text-align: center; font-weight: bold;">
+	<p> In addition, we have served <?php echo($nonMembersInterns[0][0]['count(*)']);?> other students through job skills workshops or one-off services </p>
+</div>
 <hr />
 <!--
 <div id="where_are_they_now_container" style="min-width: 310px; height: 400px"></div>
