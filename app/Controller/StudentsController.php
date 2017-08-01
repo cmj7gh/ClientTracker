@@ -41,16 +41,16 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 				$options = array('civics_status != '=>'member', 'dateDeleted' => NULL);
 			}else if(isset($who) && $who == 'members'){
 				//$this->set('students', $this->paginate('Student', array('student.id IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL')));
-				$options = array('student.id IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL');
+				$options = array('Student.id IN (select `student_semesters`.`student_id` from `student_semesters`) AND dateDeleted IS NULL');
 			}else if(isset($who) && $who == 'interns'){
 				//$this->set('students', $this->paginate('Student', array('internship_semester_id IS NOT NULL and dateDeleted IS NULL')));
 				$options = array('internship_semester_id IS NOT NULL and dateDeleted IS NULL');
 			}else if(isset($who) && $who == 'internsOnly'){
 				//$this->set('students', $this->paginate('Student', array("student.id NOT IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL AND internship_semester_id IS NOT NULL")));
-				$options = array("student.id NOT IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL AND internship_semester_id IS NOT NULL");
+				$options = array("Student.id NOT IN (select `student_semesters`.`student_id` from `student_semesters`) AND dateDeleted IS NULL AND internship_semester_id IS NOT NULL");
 			}else if(isset($who) && $who == 'other'){
 				//$this->set('students', $this->paginate('Student', array("student.id NOT IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL AND internship_semester_id IS NULL")));
-				$options = array("student.id NOT IN (select `lp`.`student_semesters`.`student_id` from `lp`.`student_semesters`) AND dateDeleted IS NULL AND internship_semester_id IS NULL");
+				$options = array("Student.id NOT IN (select `student_semesters`.`student_id` from `student_semesters`) AND dateDeleted IS NULL AND internship_semester_id IS NULL");
 			}
 			//these options are linked from wedges in the pie chart
 			else if(isset($who) && $who == 'pieChart_inHS'){
