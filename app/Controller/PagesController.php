@@ -180,10 +180,10 @@ class PagesController extends AppController {
 				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Prince George'))";
 				$textForChartHeader = " (Prince George\'s County, MD Alumni)";
 			}ELSE IF($argument == 'baltimore'){
-				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Baltimore'))";
+				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('City of Baltimore', 'Baltimore County', 'Baltimore City'))";
 				$textForChartHeader = ' (Baltimore, MD Alumni)';
 			}ELSE IF($argument == 'arlington'){
-				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Arlington'))";
+				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Arlington County'))";
 				$textForChartHeader = ' (Arlington, VA Alumni)';
 			}ELSE IF($argument == 'fairfax'){
 				$whereClause = "WHERE school_id IN (SELECT id from schools WHERE county IN ('Fairfax'))";

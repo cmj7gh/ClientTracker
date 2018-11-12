@@ -80,7 +80,9 @@
 		<td><?php echo h($student['Student']['cell_phone']); ?>&nbsp;</td>
 		<td><?php echo h($student['Student']['country']); ?>&nbsp;</td>
 		<td><?php if(isset($student['Student']['birthday'])){echo date('M j, Y', strtotime($student['Student']['birthday']));} ?>&nbsp;</td>
-		<td><?php if( h($student['Student']['graduated'])){echo("Yes");} ?>&nbsp;</td>
+		<td><?php if( h($student['Student']['graduated'])){echo("Yes");
+				if( h($student['Student']['graduation_year'])){echo(" (".$student['Student']['graduation_year'].")");}
+		 } ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $student['Student']['id']), array('class' => 'btn btn-small btn-success')); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $student['Student']['id']), array('class' => 'btn btn-small btn-info')); ?>

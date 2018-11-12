@@ -99,14 +99,14 @@ $urlWithoutArguments = substr($url, 0, strpos($url, '/charts'));
   </div>
   <div class="btn-group" role="group" aria-label="...">
 	<a href="/pages/charts/maryland" class="btn btn-default" <?php IF($argument=='maryland'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Maryland</a>
-	<a href="/pages/charts/dc" class="btn btn-default disabled" <?php IF($argument=='dc'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Washington DC</a>
+	<a href="/pages/charts/dc" class="btn btn-default" <?php IF($argument=='dc'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Washington DC</a>
 	<a href="/pages/charts/virginia" class="btn btn-default" <?php IF($argument=='virginia'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Virginia</a>
   </div>
   <div class="btn-group" role="group" aria-label="...">
 	<a href="/pages/charts/montgomery" class="btn btn-default" <?php IF($argument=='montgomery'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Montgomery County</a>
 	<a href="/pages/charts/princeGeorges" class="btn btn-default" <?php IF($argument=='princeGeorges'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Prince George's County</a>
-	<a href="/pages/charts/baltimore" class="btn btn-default disabled" <?php IF($argument=='baltimore'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>City of Baltimore</a>
-	<a href="/pages/charts/arlington" class="btn btn-default disabled" <?php IF($argument=='arlington'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Arlington County</a>
+	<a href="/pages/charts/baltimore" class="btn btn-default" <?php IF($argument=='baltimore'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>City of Baltimore</a>
+	<a href="/pages/charts/arlington" class="btn btn-default" <?php IF($argument=='arlington'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Arlington County</a>
 	<a href="/pages/charts/alexandria" class="btn btn-default" <?php IF($argument=='alexandria'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>City of Alexandria</a>
 	<a href="/pages/charts/fairfax" class="btn btn-default" <?php IF($argument=='fairfax'){echo('style="background-image: linear-gradient(#999,#999 5%,#999);"');} ?>>Fairfax County</a>
   </div>
