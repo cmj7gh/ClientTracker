@@ -2,23 +2,22 @@
 /**
  * DispatcherTest file
  *
- * PHP 5
- *
- * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) Tests <https://book.cakephp.org/2.0/en/development/testing.html>
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
  * @package       Cake.Test.Case.Routing
  * @since         CakePHP(tm) v 1.2.0.4206
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Dispatcher', 'Routing');
+App::uses('DispatcherFilter', 'Routing');
 
 if (!class_exists('AppController', false)) {
 	require_once CAKE . 'Test' . DS . 'test_app' . DS . 'Controller' . DS . 'AppController.php';
@@ -58,12 +57,11 @@ class TestDispatcher extends Dispatcher {
  *
  * @param Controller $controller
  * @param CakeRequest $request
- * @param CakeResponse $response
- * @return void
+ * @return CakeResponse
  */
-	protected function _invoke(Controller $controller, CakeRequest $request, CakeResponse $response) {
+	protected function _invoke(Controller $controller, CakeRequest $request) {
 		$this->controller = $controller;
-		return parent::_invoke($controller, $request, $response);
+		return parent::_invoke($controller, $request);
 	}
 
 /**
@@ -341,7 +339,7 @@ class SomePostsController extends AppController {
 /**
  * autoRender property
  *
- * @var bool false
+ * @var bool
  */
 	public $autoRender = false;
 
@@ -464,6 +462,8 @@ class TestCachedPagesController extends Controller {
 
 /**
  * Test cached views with themes.
+ *
+ * @return void
  */
 	public function themed() {
 		$this->cacheAction = 10;
@@ -499,6 +499,39 @@ class TimesheetsController extends Controller {
 }
 
 /**
+ * TestFilterDispatcher class
+ *
+ * @package       Cake.Test.Case.Routing
+ */
+class TestFilterDispatcher extends DispatcherFilter {
+
+	public $priority = 10;
+
+/**
+ * TestFilterDispatcher::beforeDispatch()
+ *
+ * @param mixed $event
+ * @return CakeResponse|bool
+ */
+	public function beforeDispatch(CakeEvent $event) {
+		$event->stopPropagation();
+		$response = $event->data['request'];
+		$response->addParams(array('settings' => $this->settings));
+		return null;
+	}
+
+/**
+ * TestFilterDispatcher::afterDispatch()
+ *
+ * @param mixed $event
+ * @return mixed boolean to stop the event dispatching or null to continue
+ */
+	public function afterDispatch(CakeEvent $event) {
+	}
+
+}
+
+/**
  * DispatcherTest class
  *
  * @package       Cake.Test.Case.Routing
@@ -511,6 +544,7 @@ class DispatcherTest extends CakeTestCase {
  * @return void
  */
 	public function setUp() {
+		parent::setUp();
 		$this->_get = $_GET;
 		$_GET = array();
 		$this->_post = $_POST;
@@ -538,6 +572,7 @@ class DispatcherTest extends CakeTestCase {
  * @return void
  */
 	public function tearDown() {
+		parent::tearDown();
 		$_GET = $this->_get;
 		$_POST = $this->_post;
 		$_FILES = $this->_files;
@@ -554,6 +589,7 @@ class DispatcherTest extends CakeTestCase {
  * testParseParamsWithoutZerosAndEmptyPost method
  *
  * @return void
+ * @triggers DispatcherTest $Dispatcher, array('request' => $request)
  */
 	public function testParseParamsWithoutZerosAndEmptyPost() {
 		$Dispatcher = new Dispatcher();
@@ -572,6 +608,7 @@ class DispatcherTest extends CakeTestCase {
  * testParseParamsReturnsPostedData method
  *
  * @return void
+ * @triggers DispatcherTest $Dispatcher, array('request' => $request)
  */
 	public function testParseParamsReturnsPostedData() {
 		$_POST['testdata'] = "My Posted Content";
@@ -587,6 +624,7 @@ class DispatcherTest extends CakeTestCase {
  * testParseParamsWithSingleZero method
  *
  * @return void
+ * @triggers DispatcherTest $Dispatcher, array('request' => $test)
  */
 	public function testParseParamsWithSingleZero() {
 		$Dispatcher = new Dispatcher();
@@ -605,6 +643,7 @@ class DispatcherTest extends CakeTestCase {
  * testParseParamsWithManySingleZeros method
  *
  * @return void
+ * @triggers DispatcherTest $Dispatcher, array('request' => $test)
  */
 	public function testParseParamsWithManySingleZeros() {
 		$Dispatcher = new Dispatcher();
@@ -624,6 +663,7 @@ class DispatcherTest extends CakeTestCase {
  * testParseParamsWithManyZerosInEachSectionOfUrl method
  *
  * @return void
+ * @triggers DispatcherTest $Dispatcher, array('request' => $test)
  */
 	public function testParseParamsWithManyZerosInEachSectionOfUrl() {
 		$Dispatcher = new Dispatcher();
@@ -643,6 +683,7 @@ class DispatcherTest extends CakeTestCase {
  * testParseParamsWithMixedOneToManyZerosInEachSectionOfUrl method
  *
  * @return void
+ * @triggers DispatcherTest $Dispatcher, array('request' => $test)
  */
 	public function testParseParamsWithMixedOneToManyZerosInEachSectionOfUrl() {
 		$Dispatcher = new Dispatcher();
@@ -662,6 +703,8 @@ class DispatcherTest extends CakeTestCase {
  * testQueryStringOnRoot method
  *
  * @return void
+ * @triggers DispatcherTest $Dispatcher, array('request' => $request)
+ * @triggers DispatcherTest $Dispatcher, array('request' => $request)
  */
 	public function testQueryStringOnRoot() {
 		Router::reload();
@@ -846,18 +889,12 @@ class DispatcherTest extends CakeTestCase {
 			'_clearBuffer',
 			'_flushBuffer'
 		));
-
-		$response->expects($this->never())
-			->method('body');
-
 		$response->expects($this->exactly(1))
 			->method('_isActive')
 			->will($this->returnValue(true));
-
 		ob_start();
 		$Dispatcher->dispatch($request, $response);
 		$result = ob_get_clean();
-
 		$this->assertEquals("/* this is the test asset css file */\n", $result);
 	}
 
@@ -893,6 +930,7 @@ class DispatcherTest extends CakeTestCase {
  * testPluginDispatch method
  *
  * @return void
+ * @triggers DispatcherTest $Dispatcher, array('request' => $url)
  */
 	public function testPluginDispatch() {
 		$_POST = array();
@@ -1226,6 +1264,23 @@ class DispatcherTest extends CakeTestCase {
 	}
 
 /**
+ * Tests that it is possible to attach filter with config classes to the dispatch cycle
+ *
+ * @return void
+ */
+	public function testDispatcherFilterSettings() {
+		Configure::write('Dispatcher.filters', array(
+			'TestFilterDispatcher' => array('service' => 'google.com')
+		));
+		$Dispatcher = new Dispatcher();
+		$url = new CakeRequest('some_pages/index');
+		$response = $this->getMock('CakeResponse');
+		$Dispatcher->dispatch($url, $response, array('return' => 1));
+		$settings = $url->param('settings');
+		$this->assertEquals($settings, array('service' => 'google.com'));
+	}
+
+/**
  * Tests that attaching an inexistent class as filter will throw an exception
  *
  * @expectedException MissingDispatcherFilterException
@@ -1275,6 +1330,16 @@ class DispatcherTest extends CakeTestCase {
 		$response = $this->getMock('CakeResponse', array('send'));
 		$dispatcher->dispatch($request, $response);
 		$this->assertEquals('Dispatcher.afterDispatch', $request->params['eventName']);
+
+		$dispatcher = new TestDispatcher();
+		Configure::write('Dispatcher.filters', array(
+			'filterTest' => array('callable' => array($dispatcher, 'filterTest'), 'on' => 'before')
+		));
+
+		$request = new CakeRequest('/');
+		$response = $this->getMock('CakeResponse', array('send'));
+		$dispatcher->dispatch($request, $response);
+		$this->assertEquals('Dispatcher.beforeDispatch', $request->params['eventName']);
 
 		// Test that it is possible to skip the route connection process
 		$dispatcher = new TestDispatcher();
@@ -1578,6 +1643,11 @@ class DispatcherTest extends CakeTestCase {
  * testHttpMethodOverrides method
  *
  * @return void
+ * @triggers DispatcherTest $dispatcher, array('request' => $request)
+ * @triggers DispatcherTest $dispatcher, array('request' => $request)
+ * @triggers DispatcherTest $dispatcher, array('request' => $request)
+ * @triggers DispatcherTest $dispatcher, array('request' => $request)
+ * @triggers DispatcherTest $dispatcher, array('request' => $request)
  */
 	public function testHttpMethodOverrides() {
 		Router::reload();

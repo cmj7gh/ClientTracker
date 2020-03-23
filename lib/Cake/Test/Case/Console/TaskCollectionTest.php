@@ -2,27 +2,31 @@
 /**
  * TaskCollectionTest file
  *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
  * @package       Cake.Test.Case.Console
  * @since         CakePHP(tm) v 2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('TaskCollection', 'Console');
 App::uses('Shell', 'Console');
 
 /**
- * Class TaskCollectionTest
+ * Extended Task
+ */
+class DbConfigAliasedTask extends Shell {
+}
+
+/**
+ * TaskCollectionTest
  *
  * @package       Cake.Test.Case.Console
  */
@@ -125,6 +129,27 @@ class TaskCollectionTest extends CakeTestCase {
 
 		$result = $this->Tasks->loaded();
 		$this->assertEquals(array('Extract'), $result, 'loaded tasks is wrong');
+	}
+
+/**
+ * Tests loading as an alias
+ *
+ * @return void
+ */
+	public function testLoadWithAlias() {
+		$result = $this->Tasks->load('DbConfig', array('className' => 'DbConfigAliased'));
+		$this->assertInstanceOf('DbConfigAliasedTask', $result);
+		$this->assertInstanceOf('DbConfigAliasedTask', $this->Tasks->DbConfig);
+
+		$result = $this->Tasks->loaded();
+		$this->assertEquals(array('DbConfig'), $result, 'loaded() results are wrong.');
+
+		$result = $this->Tasks->load('SomeTask', array('className' => 'TestPlugin.OtherTask'));
+		$this->assertInstanceOf('OtherTaskTask', $result);
+		$this->assertInstanceOf('OtherTaskTask', $this->Tasks->SomeTask);
+
+		$result = $this->Tasks->loaded();
+		$this->assertEquals(array('DbConfig', 'SomeTask'), $result, 'loaded() results are wrong.');
 	}
 
 }

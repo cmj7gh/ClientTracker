@@ -4,20 +4,18 @@
  *
  * Test the Acl Behavior
  *
- * PHP 5
- *
- * CakePHP : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP Project
  * @package       Cake.Test.Case.Model.Behavior
  * @since         CakePHP v 1.2.0.4487
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('AclBehavior', 'Model/Behavior');
@@ -87,9 +85,8 @@ class AclPerson extends CakeTestModel {
 		}
 		if (!$motherId) {
 			return null;
-		} else {
-			return array('AclPerson' => array('id' => $motherId));
 		}
+		return array('AclPerson' => array('id' => $motherId));
 	}
 
 }
@@ -125,6 +122,7 @@ class AclUser extends CakeTestModel {
 /**
  * parentNode
  *
+ * @return null
  */
 	public function parentNode() {
 		return null;
@@ -163,6 +161,7 @@ class AclPost extends CakeTestModel {
 /**
  * parentNode
  *
+ * @return null
  */
 	public function parentNode() {
 		return null;
@@ -227,6 +226,7 @@ class AclBehaviorTest extends CakeTestCase {
  * @return void
  */
 	public function testSetup() {
+		parent::setUp();
 		$User = new AclUser();
 		$this->assertTrue(isset($User->Behaviors->Acl->settings['User']));
 		$this->assertEquals('requester', $User->Behaviors->Acl->settings['User']['type']);

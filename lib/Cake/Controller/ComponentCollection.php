@@ -3,18 +3,18 @@
  * Components collection is used as a registry for loaded components and handles loading
  * and constructing component class objects.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.Controller
  * @since         CakePHP(tm) v 2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('ObjectCollection', 'Utility');
@@ -55,6 +55,16 @@ class ComponentCollection extends ObjectCollection implements CakeEventListener 
 	}
 
 /**
+ * Set the controller associated with the collection.
+ *
+ * @param Controller $Controller Controller to set
+ * @return void
+ */
+	public function setController(Controller $Controller) {
+		$this->_Controller = $Controller;
+	}
+
+/**
  * Get the controller associated with the collection.
  *
  * @return Controller Controller instance
@@ -69,13 +79,13 @@ class ComponentCollection extends ObjectCollection implements CakeEventListener 
  * Callbacks default to on. Disabled component methods work as normal, only callbacks are disabled.
  *
  * You can alias your component as an existing component by setting the 'className' key, i.e.,
- * {{{
+ * ```
  * public $components = array(
  *   'Email' => array(
  *     'className' => 'AliasedEmail'
  *   );
  * );
- * }}}
+ * ```
  * All calls to the `Email` component would use `AliasedEmail` instead.
  *
  * @param string $component Component name to load
@@ -84,7 +94,7 @@ class ComponentCollection extends ObjectCollection implements CakeEventListener 
  * @throws MissingComponentException when the component could not be found
  */
 	public function load($component, $settings = array()) {
-		if (is_array($settings) && isset($settings['className'])) {
+		if (isset($settings['className'])) {
 			$alias = $component;
 			$component = $settings['className'];
 		}
