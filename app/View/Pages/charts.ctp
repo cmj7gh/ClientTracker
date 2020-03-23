@@ -38,7 +38,9 @@ $(function () {
                     enabled: true,
                     color: '#000000',
                     connectorColor: '#000000',
-                    format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f} %)'
+					formatter: function() {
+                    	return '<b>' + this.point.name + '</b>: ' + Highcharts.numberFormat(this.y,0) + ' (' + Highcharts.numberFormat(this.percentage,1) +'%)';
+                	}
                 }
             }
         },
@@ -59,6 +61,11 @@ $(function () {
         }]
 	};
 
+	Highcharts.setOptions({
+		lang: {
+			thousandsSep: ','
+		}
+	});
 	
 	function drawDefaultChart() {
 		chart = Highcharts.chart('education_container',defaultOptions);
