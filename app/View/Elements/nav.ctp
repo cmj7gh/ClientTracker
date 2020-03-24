@@ -71,7 +71,7 @@
 					<a href="#" class="dropdown-toggle btn btn-info pull-right" data-toggle="dropdown">Login <b class="caret"></b></a>
 					<div class="dropdown-menu pull-right">
 						<?php //echo $this->Session->flash('auth'); ?>
-						<?php echo $this->Form->create('User', array('action' => 'login')); ?>
+						<?php echo $this->Form->create('User', array('url'=>array('controller'=>'users','action'=>'login'))); ?>
 							<fieldset class='textbox' style="padding:10px">
 								<?php 
 									echo $this->Form->input('email', array('label'=>false,'style'=>"margin-top: 8px", 'type'=>"text", 'placeholder'=>"Email"));
