@@ -364,16 +364,26 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 	
 	public function search() {
 		if($this->request->is('get')) {
-			$conditions = array();
+			$conditions = array(array('dateDeleted' => NULL));
 			if(isset($_GET['searchString'])){
 				$searchString = Sanitize::clean($_GET['searchString']);
 			}
 			if(isset($_GET['searchType'])){
 				$searchType = Sanitize::clean($_GET['searchType']);
 			}
-			if (isset($searchString) && isset($searchType) && $searchString != null && $searchType != null) {
-				$conditions = array('dateDeleted' => NULL, "$searchType LIKE" => '%' . str_replace(' ', '%', $searchString) . '%');
+			if(isset($_GET['searchString2'])){
+				$searchString2 = Sanitize::clean($_GET['searchString2']);
 			}
+			if(isset($_GET['searchType2'])){
+				$searchType2 = Sanitize::clean($_GET['searchType2']);
+			}
+			if (isset($searchString) && isset($searchType) && $searchString != null && $searchType != null) {
+				array_push($conditions, array("$searchType LIKE" => '%' . str_replace(' ', '%', $searchString) . '%'));
+			}
+			if (isset($searchString2) && isset($searchType2) && $searchString2 != null && $searchType2 != null) {
+				array_push($conditions, array("$searchType2 LIKE" => '%' . str_replace(' ', '%', $searchString2) . '%'));
+			}
+			//die(var_dump($conditions));
 			$results = $this->Paginate('Student', $conditions);
 			$this->set('students', $results);
 		}else {

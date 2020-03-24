@@ -22,30 +22,9 @@
 <!-- Search form to search for a student -->
 <div class="border-bottom">
 	<h2>Search For A Student</h2>
-	<form action="/students/search" class="form-horizontal row" id="StudentSearchForm" method="get" accept-charset="utf-8">
-		<div class="control-group pull-left">
-			<label for="StudentSearchType" class="control-label">Search Type</label>
-			<div class="controls">
-				<select name="searchType" class="student-search" id="StudentSearchType">
-					<option value="searchName">Name</option>
-					<option value="School.name">School</option>
-					<option value="email">Email</option>
-					<option value="country">Country</option>
-				</select>
-			</div>
-		</div>
-		<div class="control-group pull-left">
-			<label for="StudentSearchString" class="control-label">Search String</label>
-			<div class="controls">
-				<input name="searchString" class="student-search" type="text" id="StudentSearchString"/></input>
-			</div>
-		</div>
-		<div class="control-group pull-left">
-			<div class="controls" id="search-submit-container">
-				<button type="submit" class="btn btn-success">Submit</button>
-			</div>
-		</div>
-	</form>
+
+	<?php echo $this->element('student_search_form') ?>
+
 </div>
 
 <!-- Birthdays Container -->
