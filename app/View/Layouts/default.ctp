@@ -38,9 +38,13 @@ $cakeDescription = __d('cake_dev', 'Liberty\'s Promise');
 		echo $this->Html->css('bootstrap.min');
 		echo $this->Html->css('bootstrap-responsive');
 		echo $this->Html->css('jquery-ui.min');
+		echo $this->Html->css('pivot');
 		echo $this->Html->script('jquery-1.9.0');
 		echo $this->Html->script('bootstrap');
 		echo $this->Html->script('jquery-ui.min');
+		echo $this->Html->script('pivot.min');
+		echo $this->Html->script('plotly-basic-latest.min');
+		echo $this->Html->script('plotly_renderers.min');
 	?>
 		<script language="javascript">
 			$('.dropdown-toggle').dropdown();

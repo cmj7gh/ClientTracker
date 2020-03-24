@@ -235,6 +235,19 @@ class PagesController extends AppController {
 								,'studentsDroppedOutOfHS','studentsWithGED','studentsGraduatedHS','studentsGraduatedCollege','studentsInGradSchool','studentsGraduatedGradSchool'
 								,'studentsWithSomeCollege','UnknownEducation','argument','textForChartHeader','nonMembersInterns'));
 		}
+
+
+		if($page == 'pivot'){
+			$this->set('students', $this->Student->find('all' , array(
+						'fields' => array('Student.id', 'Student.first_name', 'Student.last_name', 'School.name', 'Student.country', 'Student.graduation_year')
+						//,'limit' => 100
+					)
+				)
+			);
+		}
+
+
+
 		if($page == 'stats'){
 			$startSemester = $this->currentSemester;
 			if(isset($_GET['StartSemester'])){
@@ -376,6 +389,8 @@ class PagesController extends AppController {
 								'startSemester', 'EndSemester'));
 		}
 		
+
+
 		$this->set(compact('page', 'subpage', 'title_for_layout'));
 		$this->render(implode('/', $path));
 	}
