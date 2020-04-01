@@ -30,13 +30,13 @@ class Birthday extends AppModel {
 
 	public function getBirthdayInfo() {
 		// Queries from before are copied over
-		$todayStaffBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where MONTH(birthday) = MONTH(now()) AND DAYOFMONTH(birthday) = DAYOFMONTH(now())");
-		$todayStudentBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where MONTH(birthday) = MONTH(now()) AND DAYOFMONTH(birthday) = DAYOFMONTH(now())");
+		$todayStaffBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where isActive = 1 AND MONTH(birthday) = MONTH(now()) AND DAYOFMONTH(birthday) = DAYOFMONTH(now())");
+		$todayStudentBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where dateDeleted IS NULL AND MONTH(birthday) = MONTH(now()) AND DAYOFMONTH(birthday) = DAYOFMONTH(now())");
 		$nextDay = $this->query("SELECT DAYOFWEEK(DATE_ADD(NOW(), INTERVAL 2 DAY)) as day");
-		$tomorrowStaffBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 1 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 1 DAY))");
-		$tomorrowStudentBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 1 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 1 DAY))");
-		$nextDayStaffBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 2 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 2 DAY))");
-		$nextDayStudentBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 2 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 2 DAY))");
+		$tomorrowStaffBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where isActive = 1 AND MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 1 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 1 DAY))");
+		$tomorrowStudentBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where dateDeleted IS NULL AND MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 1 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 1 DAY))");
+		$nextDayStaffBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from users where isActive = 1 AND MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 2 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 2 DAY))");
+		$nextDayStudentBirthdays = $this->query("Select CONCAT(first_name, ' ' , last_name) as name, id from students where dateDeleted IS NULL AND MONTH(birthday) = MONTH(DATE_ADD(now(), INTERVAL 2 DAY)) AND DAYOFMONTH(birthday) = DAYOFMONTH(DATE_ADD(now(), INTERVAL 2 DAY))");
 
 		// Transform data to have clean, nested structure
 		return array(

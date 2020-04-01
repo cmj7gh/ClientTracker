@@ -241,6 +241,7 @@ class PagesController extends AppController {
 			$this->set('students', $this->Student->find('all' , array(
 						'fields' => array('Student.id', 'Student.first_name', 'Student.last_name', 'School.name', 'Student.country', 'Student.graduation_year')
 						//,'limit' => 100
+						,'conditions' => array('Student.dateDeleted IS NULL')
 					)
 				)
 			);
