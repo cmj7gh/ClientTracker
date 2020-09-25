@@ -48,3 +48,8 @@
 <?php echo $this->element('paging_for_search'); ?>
 	</div>
 </div>
+
+<?=
+//die(var_dump($this->here));
+$this->Html->link('Export this page to a CSV',$this->here . "/export:true?" . http_build_query($this->request->query));
+?>

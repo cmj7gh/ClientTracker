@@ -135,7 +135,8 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 				$this->set('students', $this->paginate('Student', $options));
 				$this->set('who', $who);
 			} else {
-				$this->csv($this->paginate('Student', $options));
+				$this->csv($this->Student->find('all', array('conditions'=>$options)));
+				//$this->csv($this->paginate('Student', $options));
 			}
 		}
 	}
@@ -364,6 +365,7 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 	}
 	
 	public function search() {
+		//die(var_dump($this->request));
 		if($this->request->is('get')) {
 			$conditions = array(array('dateDeleted' => NULL));
 			if(isset($_GET['searchString'])){
@@ -385,8 +387,12 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 				array_push($conditions, array("$searchType2 LIKE" => '%' . str_replace(' ', '%', $searchString2) . '%'));
 			}
 			//die(var_dump($conditions));
-			$results = $this->Paginate('Student', $conditions);
-			$this->set('students', $results);
+			if (empty($this->request->params['named']['export'])) {
+				$results = $this->Paginate('Student', $conditions);
+				$this->set('students', $results);
+			} else {
+				$this->csv($this->Student->find('all', array('conditions'=>$conditions)));
+			}
 		}else {
 			$this->Session->setFlash(__("not post"), 'flash_good');
 			$results = $this->Paginate('Student');
