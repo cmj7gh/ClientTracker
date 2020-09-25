@@ -158,7 +158,7 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 		header('Content-type: application/csv');
 		header('Content-Disposition: attachment; filename="'.$filename.'"');
 		// Column headings
-		$header_row = array("Name", "School", "Email", "Cell Phone", "Country", "Graduated", "Facebook Name", "Employer", "Graduation Year", "University");
+		$header_row = array("Name", "School", "Email", "Cell Phone", "Country", "Graduated", "Facebook Name", "Employer", "Graduation Year", "University","Birthday");
 		fputcsv($csv_file,$header_row,',','"');
 
 		// Loop to create CSV file rows
@@ -166,7 +166,7 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 		{
 			// Array indexes correspond to the field names in your db table(s)
 			$row = array(
-				$result['Student']['name'], //TODO: add nickname here where appropriate (copy logic from students idnex
+				$result['Student']['name'], //TODO: add nickname here where appropriate (copy logic from students idnex)
 				$result['School']['name'],
 				$result['Student']['email'],
 				$result['Student']['cell_phone'],
@@ -175,7 +175,8 @@ public $uses = array('School', 'User', 'Student', 'Semester');
 				$result['Student']['facebook_name'],
 				$result['Student']['where_employed'],
 				$result['Student']['graduation_year'],
-				$result['Student']['which_college']
+				$result['Student']['which_college'],
+				$result['Student']['birthday']
 			);
 
 			fputcsv($csv_file,$row,',','"');
